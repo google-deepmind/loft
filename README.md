@@ -1,31 +1,41 @@
-# loft
+# LOFT: A 1 Million+ Token Long-Context Benchmark
 
-TODO(b/346650518): Add a description for your new project, explain what is
-being released here, etc... Additional, the following sections are normally
-expected for all releases. Feel free to add additional sections if appropriate
-for your project.
+This repository houses the resources for LOFT, the Long Context Frontiers benchmark, introduced in the research paper [Can Long-Context Language Models Subsume Retrieval, SQL, and More?]().
+LOFT consists of 6 long-context task categories spanning retrieval, multi-hop compositional reasoning, and more, totaling 30+ datasets and 4 modalities.
+
+**Initial Release**
+We provide access to a subset of the LOFT data (NQ and QUEST) to provide a hands-on experience and a feel for the types of tasks involved.
+We also provide an example prompt in `PROMPT_EXAMPLE.txt` showing an example of how prompting can be done for the text retrieval task.
+
+**Future Releases**
+We're actively working on expanding this repository.
+Upcoming releases will include:
+
+* Code for Dataset Regeneration: Enabling a user to recreate the full range of LOFT datasets.
+* Task-Specific Evaluation Code: Providing code to measure LCLMs' performance on each LOFT task.
+
+**Updates**
+
+* [6/18/24]: Initial release with links to a portion of LOFT data subsets.
 
 ## Installation
 
-Write instructions for how the user should install your code. The instructions
-should ideally be valid when copy-pasted. You can combine this with the Usage
-section if there's no separate installation step.
+None for now.
 
 ## Usage
 
-Write example usage of your code. The instructions should ideally be valid when
-copy-pasted, and will be used by your technical reviewer to verify that your
-package functions correctly.
+Run `wget https://storage.googleapis.com/loft-bench/loft_oss.zip` to pull the available LOFT data.
 
 ## Citing this work
 
-Add citation details here, usually a pastable BibTeX snippet:
-
 ```latex
-@article{publicationname,
-      title={Publication Name},
-      author={Author One and Author Two and Author Three},
-      year={2024},
+@article{Lee2024LongContext,
+  title={Can Long-Context Language Models Subsume Retrieval, SQL, and More?},
+  author={Jinhyuk Lee and Anthony Chen and Zhuyun Dai and Dheeru Dua and Devendra Singh Sachan and Michael Boratko and Yi Luan and Séb Arnold and Vincent Perot and Siddharth Dalmia and Hexiang Hu and Xudong Lin and Panupong Pasupat and Aida Amini and Jeremy R. Cole and Sebastian Riedel and Iftekhar Naim and Ming-Wei Chang and Kelvin Guu},
+  journal={ArXiv},
+  year={2024},
+  volume={},
+  url={}
 }
 ```
 
