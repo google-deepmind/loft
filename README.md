@@ -1,6 +1,6 @@
 # LOFT: A 1 Million+ Token Long-Context Benchmark
 
-This repository houses the resources for LOFT, the Long Context Frontiers benchmark, introduced in the research paper [Can Long-Context Language Models Subsume Retrieval, RAG, SQL, and More?]().
+This repository houses the resources for LOFT, the Long Context Frontiers benchmark, introduced in the research paper [Can Long-Context Language Models Subsume Retrieval, RAG, SQL, and More?](https://arxiv.org/abs/2406.13121).
 LOFT consists of 6 long-context task categories spanning retrieval, multi-hop compositional reasoning, and more, totaling 30+ datasets and 4 modalities.
 
 In our initial release, we provide links to download many of the text datasets in LOFT.
