@@ -70,8 +70,8 @@ None for now.
   author={Jinhyuk Lee and Anthony Chen and Zhuyun Dai and Dheeru Dua and Devendra Singh Sachan and Michael Boratko and Yi Luan and Sébastien M. R. Arnold and Vincent Perot and Siddharth Dalmia and Hexiang Hu and Xudong Lin and Panupong Pasupat and Aida Amini and Jeremy R. Cole and Sebastian Riedel and Iftekhar Naim and Ming-Wei Chang and Kelvin Guu},
   journal={ArXiv},
   year={2024},
-  volume={},
-  url={}
+  volume={abs/2406.13121},
+  url={https://arxiv.org/abs/2406.13121}
 }
 ```
 
