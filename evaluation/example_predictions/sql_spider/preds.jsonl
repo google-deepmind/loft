@@ -1,0 +1,10 @@
+{"qid": "72424cb88d329e71d075b226fc1f5ad371a3e1895933ff277c403b5bc5ce6da3", "num_turns": 1, "model_outputs": [[["Nassau"], ["Grace"], ["Whitman"], ["Taylor"], ["Saucon"], ["Painter"], ["Alumni"], ["Gates"], ["Main"], ["Lambeau"], ["Stabler"], ["Power"]]]}
+{"qid": "632bbee73f015dd096e8225c616761c23448a2895bed549786c94d628525aaaf", "num_turns": 1, "model_outputs": [[[24]]]}
+{"qid": "2ae0048fecf71b7576ef972fce93b7a1bc73dc8c57ceeccc84a3c88ba134de15", "num_turns": 1, "model_outputs": [[["Nassau", 45], ["Painter", 86], ["Alumni", 143], ["Painter", 86], ["Lambeau", 348], ["Garfield", 119], ["Rathbone", 261], ["Gates", 707]]]}
+{"qid": "04e52913595d4bb18c9f334232586f147f3cca79e12bdc50d16a34fc0c7467f0", "num_turns": 1, "model_outputs": [[["Physics", "Wrigley"]]]}
+{"qid": "402e3c337784d85a52e58e850844f54b6a2cd8e9af13f53f3ccb52310a5b84bd", "num_turns": 1, "model_outputs": [[["Cadis"]]]}
+{"qid": "aef823a3a4d0d36e3a866097ad48fd5144a2fe94a2c8e1622dc91f5784c8963c", "num_turns": 1, "model_outputs": [[[2]]]}
+{"qid": "4aa1df0f9828d97b6bfe3d1214474c87fa6aa8c17f302e22a636b8503f652cb2", "num_turns": 1, "model_outputs": [[[404]]]}
+{"qid": "081668a7b3c66e359047181955b39d49b3d7b209c6b15aa75f39409643b4250f", "num_turns": 1, "model_outputs": [[[21]]]}
+{"qid": "460f2d616f50c6de77d75056c9c65c8d3fb316bd2890c2f734a01a41ed82fb8c", "num_turns": 1, "model_outputs": [[[6]]]}
+{"qid": "e97a31925f9a173e85b6022f69086aa3579a132659f715379e4220c3d1ffd314", "num_turns": 1, "model_outputs": [[[172]]]}

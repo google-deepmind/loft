@@ -1,0 +1,10 @@
+{"qid": "test1018", "query_text": "when does monday night raw come on hulu", "metadata": {"qrels": [["doc35916", 1]]}, "answers": [["doc35916", 1]]}
+{"qid": "test103", "query_text": "who did puerto rico belong to before the u.s", "metadata": {"qrels": [["doc3528", 1]]}, "answers": [["doc3528", 1]]}
+{"qid": "test1032", "query_text": "when did season 4 of glee come out", "metadata": {"qrels": [["doc36245", 1]]}, "answers": [["doc36245", 1]]}
+{"qid": "test1041", "query_text": "what is the genus of a bald eagle", "metadata": {"qrels": [["doc36467", 1]]}, "answers": [["doc36467", 1]]}
+{"qid": "test1062", "query_text": "when does boomer find out she a cylon", "metadata": {"qrels": [["doc36987", 1]]}, "answers": [["doc36987", 1]]}
+{"qid": "test1065", "query_text": "what is the female lion called in lion king", "metadata": {"qrels": [["doc37055", 1]]}, "answers": [["doc37055", 1]]}
+{"qid": "test1087", "query_text": "who plays the woodsman in over the garden wall", "metadata": {"qrels": [["doc37964", 1]]}, "answers": [["doc37964", 1]]}
+{"qid": "test1136", "query_text": "who introduced the first chrismas tree to the uk", "metadata": {"qrels": [["doc40236", 1]]}, "answers": [["doc40236", 1]]}
+{"qid": "test1156", "query_text": "who played cruella de vil in 101 dalmatians", "metadata": {"qrels": [["doc41039", 1]]}, "answers": [["doc41039", 1]]}
+{"qid": "test1172", "query_text": "who sang the song i wanna be sedated", "metadata": {"qrels": [["doc41558", 1]]}, "answers": [["doc41558", 1]]}
