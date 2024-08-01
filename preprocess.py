@@ -22,22 +22,30 @@ python preprocess.py \
 """
 
 from collections.abc import Sequence
+import glob
 import json
 import os
 import zipfile
 
 from absl import app
 from absl import flags
-# If not installed, run: pip install wget
+import cv2
+import numpy as np
+import tqdm
 import wget
 
 
+# pylint: disable=line-too-long
 DATASET_DOWNLOAD_LINKS = {
     "fiqa": "https://public.ukp.informatik.tu-darmstadt.de/thakur/BEIR/datasets/fiqa.zip",
     "msmarco": "https://public.ukp.informatik.tu-darmstadt.de/thakur/BEIR/datasets/msmarco.zip",
     "quora": "https://public.ukp.informatik.tu-darmstadt.de/thakur/BEIR/datasets/quora.zip",
     "webis_touche2020": "https://public.ukp.informatik.tu-darmstadt.de/thakur/BEIR/datasets/webis-touche2020.zip",
+    "msrvtt": (
+        "https://www.robots.ox.ac.uk/~maxbain/frozen-in-time/data/MSRVTT.zip"
+    ),
 }
+# pylint: enable=line-too-long
 
 _INPUT_DIR = flags.DEFINE_string(
     "input_dir",
@@ -59,6 +67,7 @@ _COMPRESSION_TYPE = flags.DEFINE_enum(
     help="Compression type of the dataset.",
 )
 
+VIDEO_FILEPATTERN = "msrvtt/videos/all/{}.mp4"
 DATASET_LENGTHS = ["32k", "128k", "1m"]
 QUERY_FILES = [
     "dev_queries.jsonl",
@@ -67,33 +76,90 @@ QUERY_FILES = [
 ]
 
 
+def extract_frames_from_video(video_path, output_pattern, num_frames=3):
+  """Extract video frames from a input video at a given frame rate."""
+  # Open the video file
+  video_capture = cv2.VideoCapture(video_path)
+
+  # Get the total number of frames in the video
+  total_frames = int(video_capture.get(cv2.CAP_PROP_FRAME_COUNT))
+
+  # Generate the frame indices to sample uniformly
+  frame_indices = np.linspace(0, total_frames - 1, num_frames, dtype=int)
+
+  frame_names = []
+  for frame_index in frame_indices:
+    # Set the video capture to the specific frame index
+    video_capture.set(cv2.CAP_PROP_POS_FRAMES, frame_index)
+
+    ret, frame = video_capture.read()
+
+    if ret:
+      # Save the sampled frame to the output folder
+      frame_name = f"{output_pattern}_{frame_index:08d}.jpg"
+      cv2.imwrite(frame_name, frame)
+      frame_names.append(os.path.basename(frame_name))
+
+  video_capture.release()
+  return frame_names
+
+
+def extract_video_resource(
+    download_dir: str, resource_dir: str
+) -> dict[str, str]:
+  """Extract video into image frames."""
+  if not os.path.exists(resource_dir):
+    os.makedirs(resource_dir)
+
+  video2frames = dict()
+  video_filepaths = glob.glob(
+      os.path.join(download_dir, VIDEO_FILEPATTERN.format("*"))
+  )
+  for video_filepath in tqdm.tqdm(video_filepaths):
+    video_id = os.path.basename(video_filepath).split(".")[0]
+    video_frame_pattern = os.path.join(resource_dir, video_id)
+
+    video2frames[video_id] = extract_frames_from_video(
+        video_filepath, video_frame_pattern
+    )
+  return video2frames
+
+
 def extract_dataset(
     dataset: str, input_dir: str, compression_type: str
 ) -> None:
   """Extracts the dataset from the compressed file."""
-  os.rename(
-      os.path.join(input_dir, dataset.replace("_", "-") + ".zip"),
-      os.path.join(input_dir, dataset + ".zip"),
-  )
   if compression_type == "zip":
     with zipfile.ZipFile(
         os.path.join(input_dir, dataset + ".zip"), "r"
     ) as zip_ref:
+      extracted_dir = zip_ref.namelist()[0]
       zip_ref.extractall(input_dir)
+      # Rename the extracted directory to the dataset name. Needed for datasets
+      # like msrvtt and webis_touche2020 where the extracted directory name is
+      # different from the dataset name.
+      os.rename(
+          os.path.join(input_dir, extracted_dir),
+          os.path.join(input_dir, dataset),
+      )
   else:
     raise ValueError(f"Unsupported compression type: {compression_type}")
-  os.rename(
-      os.path.join(input_dir, dataset.replace("_", "-")),
-      os.path.join(input_dir, dataset),
-  )
 
 
 def download_dataset(dataset: str, download_dir: str) -> None:
   """Downloads the dataset from the dataset download link."""
 
   os.makedirs(download_dir, exist_ok=True)
-  wget.download(DATASET_DOWNLOAD_LINKS[dataset], out=download_dir)
-  extract_dataset(dataset, download_dir, _COMPRESSION_TYPE.value)
+  zipped_filepath = os.path.join(download_dir, dataset + ".zip")
+  if not os.path.exists(zipped_filepath):
+    wget.download(DATASET_DOWNLOAD_LINKS[dataset], out=zipped_filepath)
+  else:
+    print("Skipping downloading as the zip file already exists.")
+
+  if not os.path.exists(os.path.join(download_dir, dataset)):
+    extract_dataset(dataset, download_dir, _COMPRESSION_TYPE.value)
+  else:
+    print("Skipping extracting as the dataset already exists.")
 
 
 def load_dataset(
@@ -166,13 +232,48 @@ def update_loft_dataset(
       print(f"Wrote to {target_corpus_file}.")
 
 
+def update_mm_loft_dataset(
+    input_dir: str,
+    resource_mapping: dict[str, str],
+) -> None:
+  """Update the LOFT dataset with the missing fields."""
+  for length in DATASET_LENGTHS:
+    # Loading the corpus file.
+    target_corpus_file = os.path.join(input_dir, length, "corpus.jsonl")
+    passages = []
+    with open(target_corpus_file, "r") as f:
+      for line in f:
+        passage = json.loads(line)
+        resource_id = passage["pid"]
+        passage["metadata"]["img_paths"] = resource_mapping[resource_id]
+        passages.append(passage)
+
+    # Writing the corpus file.
+    with open(target_corpus_file, "w") as f:
+      for passage in passages:
+        json.dump(passage, f)
+        f.write("\n")
+      print(f"Wrote to {target_corpus_file}.")
+
+
 def main(argv: Sequence[str]) -> None:
   if len(argv) > 1:
     raise app.UsageError("Too many command-line arguments.")
 
   download_dataset(_DATASET.value, os.path.join(_INPUT_DIR.value, "source"))
-  qid2text, pid2text = load_dataset(_DATASET.value, _INPUT_DIR.value)
-  update_loft_dataset(qid2text, pid2text, _INPUT_DIR.value)
+  if _DATASET.value in ["msrvtt"]:
+    resource_mapping = extract_video_resource(
+        os.path.join(_INPUT_DIR.value, "source"),
+        os.path.join(_INPUT_DIR.value, "resource"),
+    )
+    update_mm_loft_dataset(_INPUT_DIR.value, resource_mapping)
+  elif _DATASET.value in ["fiqa", "msmarco", "quora", "webis_touche2020"]:
+    qid2text, pid2text = load_dataset(_DATASET.value, _INPUT_DIR.value)
+    update_loft_dataset(qid2text, pid2text, _INPUT_DIR.value)
+  else:
+    raise ValueError(
+        f"Preprocessor for dataset {_DATASET.value} not available."
+    )
 
 
 if __name__ == "__main__":
