@@ -26,6 +26,11 @@ We provide example predictions for each task under
 evaluation/example_predictions. To run evaluation on the example predictions:
 ```
 python run_evaluation.py \
+  --answer_file_path evaluation/example_predictions/icl_date/queries.jsonl \
+  --pred_file_path evaluation/example_predictions/icl_date/preds.jsonl \
+  --task_type icl
+
+python run_evaluation.py \
   --answer_file_path evaluation/example_predictions/rag_nq/queries.jsonl \
   --pred_file_path evaluation/example_predictions/rag_nq/preds.jsonl \
   --task_type rag

@@ -17,6 +17,7 @@
 
 import types
 
+from evaluation import icl
 from evaluation import loft_evaluation
 from evaluation import rag
 from evaluation import retrieval
@@ -25,6 +26,12 @@ from evaluation import utils
 
 
 EVALUATION_TASKS = types.MappingProxyType({
+    "icl": icl.IclEvaluation(
+        config=loft_evaluation.EvaluationConfig(
+            process_model_response_fns=[utils.normalize_answers],
+            process_gold_answer_fns=[utils.normalize_answer],
+        )
+    ),
     "rag": rag.RagEvaluation(
         config=loft_evaluation.EvaluationConfig(
             process_model_response_fns=[
