@@ -1,0 +1,10 @@
+{"qid": "0", "num_turns": 1, "model_outputs": [["(D)"]]}
+{"qid": "1", "num_turns": 1, "model_outputs": [["(B)"]]}
+{"qid": "2", "num_turns": 1, "model_outputs": [["(A)"]]}
+{"qid": "3", "num_turns": 1, "model_outputs": [["(D)"]]}
+{"qid": "4", "num_turns": 1, "model_outputs": [["(D)"]]}
+{"qid": "5", "num_turns": 1, "model_outputs": [["(A)"]]}
+{"qid": "6", "num_turns": 1, "model_outputs": [["(F)"]]}
+{"qid": "7", "num_turns": 1, "model_outputs": [["(D)"]]}
+{"qid": "8", "num_turns": 1, "model_outputs": [["(E)"]]}
+{"qid": "9", "num_turns": 1, "model_outputs": [["(A)"]]}
