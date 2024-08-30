@@ -10,11 +10,12 @@ Install the dependencies in `requirements.txt` to use this repository.
 
 **Future Releases**
 
-* Multi-modal data and evaluation code.
+* Multi-modal data.
 * Task-specific prompts.
 
 **Releases**
 
+* [8/30/24]: Release of the evaluation code for ICL and some ICL and visual retrieval datasets.
 * [6/29/24]: Release of the evaluation code for text tasks and code to regenerate some of the LOFT datasets.
 * [6/20/24]: Initial release with links to download many of the LOFT text datasets.
 
@@ -78,32 +79,32 @@ See [evaluation/example_predictions/](evaluation/example_predictions/) to unders
 | Text Retrieval | [Quora](https://github.com/beir-cellar/beir) | Duplication Detection | `retrieval` |`recall@1` | ✅ | [Link](https://storage.googleapis.com/loft-bench/retrieval/quora.zip) | 
 | Text Retrieval | [SciFact](https://github.com/beir-cellar/beir) | Citation Prediction | `retrieval` |`recall@1`  | - | [Link](https://storage.googleapis.com/loft-bench/retrieval/scifact.zip) | 
 | Text Retrieval | [Touché-2020](https://github.com/beir-cellar/beir) | Argument Retrieval | `retrieval` | `recall@1`  | ✅ | [Link](https://storage.googleapis.com/loft-bench/retrieval/webis_touche2020.zip) | 
-| Text Retrieval | [TopiOCQA](https://github.com/McGill-NLP/topiocqa) | Multi-turn QA | `retrieval` |`recall@1`  | ✅ | Coming Soon |
+| Text Retrieval | [TopiOCQA](https://github.com/McGill-NLP/topiocqa) | Multi-turn QA | `retrieval` |`recall@1`  | - | [Link](https://storage.googleapis.com/loft-bench/retrieval/topiocqa.zip) |
 | Text Retrieval | [HotPotQA](https://github.com/beir-cellar/beir) | Multi-hop QA | `retrieval` | `mrecall@2` | - | [Link](https://storage.googleapis.com/loft-bench/retrieval/hotpotqa.zip) |
 | Text Retrieval | [MuSiQue](https://allenai.org/data/musique) | Multi-hop QA | `retrieval` | `mrecall@5` | - | [Link](https://storage.googleapis.com/loft-bench/retrieval/musique.zip) |
 | Text Retrieval | [QAMPARI](https://github.com/samsam3232/qampari) | Multi-target QA | `retrieval` |  `mrecall@5` | - | [Link](https://storage.googleapis.com/loft-bench/retrieval/qampari.zip) |
 | Text Retrieval | [QUEST](https://github.com/google-research/language/tree/master/language/quest) | Multi-target QA | `retrieval` | `mrecall@3` | - | [Link](https://storage.googleapis.com/loft-bench/retrieval/quest.zip) |
-| Visual Retrieval | [Flickr30k](https://www.kaggle.com/datasets/hsankesara/flickr-image-dataset) | Image Retrieval | - |  - |✅ | Coming Soon |
-| Visual Retrieval | [MS COCO](https://cocodataset.org) | Image Retrieval | - |  - |✅ | Coming Soon |
-| Visual Retrieval | [OVEN](https://github.com/open-vision-language/oven) | Image-text Retrieval | - | - | - | Coming Soon |
-| Visual Retrieval | [MSR-VTT](https://cove.thecvf.com/datasets/839) | Video Retrieval | - | - | ✅ | Coming Soon |
-| Audio Retrieval | [FLEURS-en](https://huggingface.co/datasets/google/fleurs) | Audio Retrieval | - | - | - | Coming Soon |
-| Audio Retrieval | [FLEURS-es](https://huggingface.co/datasets/google/fleurs) | Audio Retrieval | - | - | - | Coming Soon |
-| Audio Retrieval | [FLEURS-fr](https://huggingface.co/datasets/google/fleurs) | Audio Retrieval | - | - | - | Coming Soon |
-| Audio Retrieval | [FLEURS-hi](https://huggingface.co/datasets/google/fleurs) | Audio Retrieval | - | - | - | Coming Soon |
-| Audio Retrieval | [FLEURS-zh](https://huggingface.co/datasets/google/fleurs) | Audio Retrieval | - | - | - | Coming Soon |
+| Visual Retrieval | [Flickr30k](https://www.kaggle.com/datasets/hsankesara/flickr-image-dataset) | Image Retrieval | `retrieval` | `recall@1` |✅ | Coming Soon |
+| Visual Retrieval | [MS COCO](https://cocodataset.org) | Image Retrieval | `retrieval` | `recall@1` |✅ | Coming Soon |
+| Visual Retrieval | [OVEN](https://github.com/open-vision-language/oven) | Image-text Retrieval | `retrieval` | `recall@1` | - | Coming Soon |
+| Visual Retrieval | [MSR-VTT](https://cove.thecvf.com/datasets/839) | Video Retrieval | `retrieval` | `recall@1`| ✅ | [Link](https://storage.googleapis.com/loft-bench/mm/msrvtt.zip) |
+| Audio Retrieval | [FLEURS-en](https://huggingface.co/datasets/google/fleurs) | Audio Retrieval | `retrieval` | `recall@1` | - | Coming Soon |
+| Audio Retrieval | [FLEURS-es](https://huggingface.co/datasets/google/fleurs) | Audio Retrieval | `retrieval` | `recall@1` | - | Coming Soon |
+| Audio Retrieval | [FLEURS-fr](https://huggingface.co/datasets/google/fleurs) | Audio Retrieval | `retrieval` | `recall@1`| - | Coming Soon |
+| Audio Retrieval | [FLEURS-hi](https://huggingface.co/datasets/google/fleurs) | Audio Retrieval | `retrieval` | `recall@1` | - | Coming Soon |
+| Audio Retrieval | [FLEURS-zh](https://huggingface.co/datasets/google/fleurs) | Audio Retrieval | `retrieval` | `recall@1` | - | Coming Soon |
 | RAG | [NQ](https://github.com/beir-cellar/beir) | Question Answering | `rag` | `subspan_em` | - | [Link](https://storage.googleapis.com/loft-bench/rag/nq.zip) |
-| RAG | [TopiOCQA](https://github.com/McGill-NLP/topiocqa) | Multi-turn QA | `rag` |  `subspan_em` | ✅ | Coming Soon |
+| RAG | [TopiOCQA](https://github.com/McGill-NLP/topiocqa) | Multi-turn QA | `rag` |  `subspan_em` | - | Coming Soon |
 | RAG | [HotPotQA](https://github.com/beir-cellar/beir) | Multi-hop QA | `rag` |  `subspan_em` | - | [Link](https://storage.googleapis.com/loft-bench/rag/hotpotqa.zip) |
 | RAG | [MuSiQue](https://allenai.org/data/musique) | Multi-hop QA | `rag` |  `subspan_em` | - | [Link](https://storage.googleapis.com/loft-bench/rag/musique.zip) |
 | RAG | [QAMPARI](https://github.com/samsam3232/qampari) | Multi-target QA | `multi_value_rag` | `subspan_em` | - | [Link](https://storage.googleapis.com/loft-bench/rag/qampari.zip) |
 | RAG | [QUEST](https://github.com/google-research/language/tree/master/language/quest) | Multi-target QA | `multi_value_rag` | `subspan_em` | - | [Link](https://storage.googleapis.com/loft-bench/rag/quest.zip) |
 | SQL | [Spider](https://yale-lily.github.io/spider) | Single-turn SQL | `sql` | `exec_acc` | - | [Link](https://storage.googleapis.com/loft-bench/sql/spider.zip) |
 | SQL | [SParC](https://yale-lily.github.io/sparc) | Multi-turn SQL | `sql` | `exec_acc` | - | [Link](https://storage.googleapis.com/loft-bench/sql/sparc.zip) |
-| Many-Shot ICL | [BBH-date](https://github.com/suzgunmirac/BIG-Bench-Hard) | Multiple-choice QA | - | - | - | Coming Soon |
-| Many-Shot ICL |[BBH-salient](https://github.com/suzgunmirac/BIG-Bench-Hard) | Multiple-choice QA | - |- | - | Coming Soon |
-| Many-Shot ICL |[BBH-tracking7](https://github.com/suzgunmirac/BIG-Bench-Hard) | Multiple-choice QA | - | - | - | Coming Soon |
-| Many-Shot ICL |[BBH-web](https://github.com/suzgunmirac/BIG-Bench-Hard) | Multiple-choice QA | - | - | - | Coming Soon |
+| Many-Shot ICL | [BBH-date](https://github.com/suzgunmirac/BIG-Bench-Hard) | Multiple-choice QA | `icl` | `em` | - | [Link](https://storage.googleapis.com/loft-bench/icl/date_understanding.zip) |
+| Many-Shot ICL |[BBH-salient](https://github.com/suzgunmirac/BIG-Bench-Hard) | Multiple-choice QA | `icl` | `em` | - | [Link](https://storage.googleapis.com/loft-bench/icl/salient_translation_error_detection.zip) |
+| Many-Shot ICL |[BBH-tracking7](https://github.com/suzgunmirac/BIG-Bench-Hard) | Multiple-choice QA | `icl` | `em` | - | [Link](https://storage.googleapis.com/loft-bench/icl/tracking_shuffled_objects_seven_objects.zip) |
+| Many-Shot ICL |[BBH-web](https://github.com/suzgunmirac/BIG-Bench-Hard) | Multiple-choice QA | `icl` | `em` | - | [Link](https://storage.googleapis.com/loft-bench/icl/web_of_lies.zip) |
 | Many-Shot ICL |[LIB-dialogue](https://github.com/TIGER-AI-Lab/LongICLBench) | Classification | - | - | ✅ | Coming Soon |
 
 ## Citing this work
