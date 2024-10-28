@@ -15,16 +15,15 @@
 # ==============================================================================
 
 BASE_DIR=$1
+DATASET=$2
 
-DATASET=msmarco
 python run_inference.py \
     --prompt_prefix_path ${BASE_DIR}/prompts/retrieval_128k/retrieval_${DATASET}_128k.txt \
     --data_dir ${BASE_DIR}/data/retrieval/${DATASET}/128k \
     --split dev \
     --context_length 128k \
     --output_path ${BASE_DIR}/outputs/retrieval/${DATASET}/128k/predictions.jsonl \
-    --project_id ${PROJECT_ID} \
-    --overwrite
+    --project_id ${PROJECT_ID}
 
 python run_evaluation.py \
     --answer_file_path ${BASE_DIR}/data/retrieval/${DATASET}/128k/dev_queries.jsonl \

@@ -15,14 +15,32 @@
 # ==============================================================================
 
 BASE_DIR=$1
+ORIGINAL_DIR=$(pwd)
 cd ${BASE_DIR}
-mkdir -p retrieval/
-cd retrieval
 
 # Text retrieval datasets.
+mkdir -p data/retrieval/
+cd data/retrieval
 DATASETS=("arguana" "fever" "fiqa" "msmarco" "nq" "quora" "scifact" "webis_touche2020" "topiocqa" "hotpotqa" "musique" "qampari" "quest")
 for DATASET in "${DATASETS[@]}"; do
   wget https://storage.googleapis.com/loft-bench/retrieval/${DATASET}.zip
   unzip ${DATASET}.zip
   rm ${DATASET}.zip
 done
+
+# Infilling
+cd ${ORIGINAL_DIR}
+DATASETS=("fiqa" "msmarco" "quora" "webis_touche2020")
+for DATASET in "${DATASETS[@]}"; do
+  python preprocess.py \
+    --input_dir ${BASE_DIR}/data/retrieval/${DATASET} \
+    --dataset ${DATASET}
+done
+
+# Sample retrieval 128k prompts.
+cd ${BASE_DIR}
+mkdir -p prompts/
+cd prompts
+wget https://storage.googleapis.com/loft-bench/prompts/retrieval_128k.zip
+unzip retrieval_128k.zip
+rm retrieval_128k.zip
