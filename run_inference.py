@@ -97,6 +97,11 @@ _OVERWRITE = flags.DEFINE_bool(
     "If True, regenerate the outputs. If False, reuse results from output file"
     "if it already exists.",
 )
+_CACHE_FIRST_INPUT = flags.DEFINE_bool(
+    "cache_first_input",
+    False,
+    "If True, run and cache the first input to the model.",
+)
 _MAX_WORKERS = flags.DEFINE_integer(
     "max_workers",
     1,
@@ -214,15 +219,17 @@ def main(argv: Sequence[str]) -> None:
   utils.save_content_chunks(indexing_example.all_chunks, prompt_path)
   print(f"Finished saving one prompt to disk in {prompt_path}.txt")
 
-  try:
-    print("Starting caching.")
-    model_output = model.infer(
-        list(indexing_example.all_chunks),
-    )
-    print("Finished caching. Model output:", model_output)
-  except Exception as exception:  # pylint: disable=broad-exception-caught
-    print(exception)
-    print("Failed to cache; continuing inference without caching...")
+  if _CACHE_FIRST_INPUT.value:
+    try:
+      print("Starting caching.")
+      # Do prefix cache by running the inference once.
+      model_output = model.infer(
+          list(indexing_example.all_chunks),
+      )
+      print("Finished caching. Model output:", model_output)
+    except Exception as exception:  # pylint: disable=broad-exception-caught
+      print(exception)
+      print("Failed to cache; continuing inference without caching...")
 
   with open(_OUTPUT_PATH.value, "w", encoding="utf-8") as f:
     with concurrent.futures.ThreadPoolExecutor(

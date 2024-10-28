@@ -28,7 +28,7 @@ for DATASET in "${DATASETS[@]}"; do
   rm ${DATASET}.zip
 done
 
-# Infilling
+# Preprocess and fill in required fields.
 cd ${ORIGINAL_DIR}
 DATASETS=("fiqa" "msmarco" "quora" "webis_touche2020")
 for DATASET in "${DATASETS[@]}"; do
