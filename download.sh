@@ -16,14 +16,48 @@
 
 BASE_DIR=$1
 ORIGINAL_DIR=$(pwd)
-cd ${BASE_DIR}
+mkdir -p ${BASE_DIR}
 
 # Text retrieval datasets.
+cd ${BASE_DIR}
 mkdir -p data/retrieval/
 cd data/retrieval
 DATASETS=("arguana" "fever" "fiqa" "msmarco" "nq" "quora" "scifact" "webis_touche2020" "topiocqa" "hotpotqa" "musique" "qampari" "quest")
 for DATASET in "${DATASETS[@]}"; do
   wget https://storage.googleapis.com/loft-bench/retrieval/${DATASET}.zip
+  unzip ${DATASET}.zip
+  rm ${DATASET}.zip
+done
+
+# Text RAG datasets.
+cd ${BASE_DIR}
+mkdir -p data/rag/
+cd data/rag
+DATASETS=("nq" "hotpotqa" "musique" "qampari" "quest")
+for DATASET in "${DATASETS[@]}"; do
+  wget https://storage.googleapis.com/loft-bench/rag/${DATASET}.zip
+  unzip ${DATASET}.zip
+  rm ${DATASET}.zip
+done
+
+# SQL datasets.
+cd ${BASE_DIR}
+mkdir -p data/sql/
+cd data/sql
+DATASETS=("spider" "sparc")
+for DATASET in "${DATASETS[@]}"; do
+  wget https://storage.googleapis.com/loft-bench/sql/${DATASET}.zip
+  unzip ${DATASET}.zip
+  rm ${DATASET}.zip
+done
+
+# ICL datasets.
+cd ${BASE_DIR}
+mkdir -p data/icl/
+cd data/icl
+DATASETS=("date_understanding" "salient_translation_error_detection" "tracking_shuffled_objects_seven_objects" "web_of_lies")
+for DATASET in "${DATASETS[@]}"; do
+  wget https://storage.googleapis.com/loft-bench/icl/${DATASET}.zip
   unzip ${DATASET}.zip
   rm ${DATASET}.zip
 done

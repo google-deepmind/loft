@@ -1,71 +1,82 @@
 # LOFT: A 1 Million+ Token Long-Context Benchmark
 
 This repository houses the resources for LOFT, the Long Context Frontiers benchmark, introduced in the research paper [Can Long-Context Language Models Subsume Retrieval, RAG, SQL, and More?](https://arxiv.org/abs/2406.13121).
-LOFT consists of 6 long-context task categories spanning retrieval, multi-hop compositional reasoning, and more, totaling 30+ datasets and 4 modalities.
+LOFT consists of 6 long-context task categories spanning retrieval, multi-hop compositional reasoning, and more, totaling 35 datasets and 4 modalities.
 
-We've provided links to download many of the text datasets in LOFT, evaluation code, and code to regenerate some of the datasets that we do not fully release.
+## Installation
+```bash
+$ git clone git@github.com:google-deepmind/loft.git
+$ cd loft/
+$ pip install -r requirements.txt
+```
+
+## Download Datasets and Prompts
+The script below downloads all the LOFT datasets under `BASE_DIR`.
+
+```bash
+$ BASE_DIR=your-choice-of-directory
+$ sh download.sh $BASE_DIR
+```
+
+Each dataset is also available from the links in the [Datasets](#datasets) table.
+For a small subset, `download.sh` will additionally run `preprocess.py`, which infills the missing fields in the queries and corpus files.
+Once the download is completed, you will see the file structure as below:
+
+```
+$BASE_DIR
+│
+└───data
+│   └───retrieval
+│   │   └───arguana
+│   │   │   └───32k
+│   │   │   │   └───corpus.jsonl
+│   │   │   │   └───dev_queries.jsonl
+│   │   │   │   └───few_shot_queries.jsonl
+│   │   │   └───128k
+│   │   │   └───1m
+│   │   └───fever
+│   │   └───...
+|   │
+│   └───rag
+│   └───sql
+│   └───icl
+│
+└───prompts
+    └───retrieval_128k
+        │   retrieval_arguana_128k.txt
+        │   retrieval_fever_128k.txt
+        └───...
+```
+
+The `data` folder contains the LOFT datasets and the `prompts` folder contains samples of prompts used in LOFT.
 We also provide an example prompt in `PROMPT_EXAMPLE.txt` showing how Corpus-in-Context (CiC) prompting can be done for the text retrieval task.
 
-Install the dependencies in `requirements.txt` to use this repository.
+## Inference and Evaluation
+We currently support using `gemini-1.5-flash-002` from VertexAI for inference.
+Please prepare your `PROJECT_ID` from [Google Cloud](https://cloud.google.com/vertex-ai/generative-ai/docs/start/quickstarts/quickstart-multimodal#expandable-1).
+To run the inference with `gemini-1.5-flash-002` and evaluate predictions:
 
-**Future Releases**
-
-* Multi-modal data.
-* Task-specific prompts.
-
-**Releases**
-
-* [8/30/24]: Release of the evaluation code for ICL and some ICL and visual retrieval datasets.
-* [6/29/24]: Release of the evaluation code for text tasks and code to regenerate some of the LOFT datasets.
-* [6/20/24]: Initial release with links to download many of the LOFT text datasets.
-
-## Dataset Creation via Infilling
-For many of the datasets, we release the complete set of queries and corpus used in the LOFT paper via the links in the [Datasets](#datasets) table.
-For a small subset, we require the user to first download using the links in the [Datasets](#datasets) table, then run `preprocess.py` which downloads the original dataset and infills the missing fields in the queries and corpus files.
-The datasets that do require infilling have a ✅ under the `Infilling Needed?` column.
-
-For example, FIQA for text retrieval requires infilling.
-To infill the FIQA dataset, first download the ZIP file and unzip.
-Then run:
 ```bash
-python preprocess.py \
-  --input_dir path/to/unzipped/fiqa \
-  --dataset fiqa \
-```
+DATASET=msmarco
+PROJECT_ID=your-gcp-project-id
+python run_inference.py \
+    --prompt_prefix_path ${BASE_DIR}/prompts/retrieval_128k/retrieval_${DATASET}_128k.txt \
+    --data_dir ${BASE_DIR}/data/retrieval/${DATASET}/128k \
+    --split dev \
+    --context_length 128k \
+    --output_path ${BASE_DIR}/outputs/retrieval/${DATASET}/128k/predictions.jsonl \
+    --project_id ${PROJECT_ID}
 
-## Evaluation
-To evaluate predictions:
-```bash
 python run_evaluation.py \
-  --answer_file_path path/to/queries.jsonl \
-  --pred_file_path path/to/preds.jsonl \
-  --task_type <task_type>
+    --answer_file_path ${BASE_DIR}/data/retrieval/${DATASET}/128k/dev_queries.jsonl \
+    --pred_file_path ${BASE_DIR}/outputs/retrieval/${DATASET}/128k/predictions.jsonl \
+    --task_type retrieval
 ```
 
+The same script can be found from `infer_eval.sh`.
 We provide example queries and predictions files in  [evaluation/example_predictions/](evaluation/example_predictions/).
-For example, to run evaluation on the RAG Natural Questions example predictions:
-```bash
-python run_evaluation.py \
-  --answer_file_path evaluation/example_predictions/rag_nq/queries.jsonl \
-  --pred_file_path evaluation/example_predictions/rag_nq/preds.jsonl \
-  --task_type rag
-```
-
-The `task_type`'s are defined in [evaluation/__init__.py](evaluation/__init__.py).
 Each `task_type` outputs many different metric scores.
 To understand which `task_type` to use for each dataset and also to see the primary evaluation metric reported in the paper for each dataset, see the [Datasets](#datasets) table.
-
-Evaluation expects a prediction file in a JSONLines format where each line has the following structure:
-
-`{"qid": "test103", "num_turns": 1, "model_outputs": [["Spain"]]}`
-
-* `qid`: QID of the prediction corresponding to an entry in the queries file.
-* `num_turns`: Number of turns for the QID. This is 1 except for multi-turn datasets (TopiOCQA and SParC).
-* `model_outputs`: The model predictions extracted as a list. We leave it to the user of LOFT to extract the model predictions into the right structure.
-
-The required structure of the `model_outputs` field differs slightly for each `task_type`.
-See [evaluation/example_predictions/](evaluation/example_predictions/) to understand how to format the predictions file.
-
 
 ## Datasets
 
@@ -106,6 +117,16 @@ See [evaluation/example_predictions/](evaluation/example_predictions/) to unders
 | Many-Shot ICL |[BBH-tracking7](https://github.com/suzgunmirac/BIG-Bench-Hard) | Multiple-choice QA | `icl` | `em` | - | [Link](https://storage.googleapis.com/loft-bench/icl/tracking_shuffled_objects_seven_objects.zip) |
 | Many-Shot ICL |[BBH-web](https://github.com/suzgunmirac/BIG-Bench-Hard) | Multiple-choice QA | `icl` | `em` | - | [Link](https://storage.googleapis.com/loft-bench/icl/web_of_lies.zip) |
 | Many-Shot ICL |[LIB-dialogue](https://github.com/TIGER-AI-Lab/LongICLBench) | Classification | - | - | ✅ | Coming Soon |
+
+## Past & Upcoming Releases
+
+* [ ] Remaining multi-modal data.
+* [ ] Prompts for RAG, SQL, and multi-modal retrieval.
+* [ ] Prompt conversion code (data => prompt).
+* [x] Inference code and prompts for retrieval (10/25/24).
+* [x] Evaluation code for ICL and some ICL and visual retrieval datasets (8/30/24).
+* [x] Evaluation code for text tasks and code to regenerate some of the LOFT datasets (6/29/24).
+* [x] Initial release with links to download many of the LOFT text datasets (6/20/24).
 
 ## Citing this work
 
