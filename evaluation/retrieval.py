@@ -90,7 +90,7 @@ class RetrievalEvaluation(evaluation.LOFTEvalution):
     for turn_number in range(instance.num_turns):
       instance_metrics = {}
       pid2text = {}
-      if "candidate_path" in instance.metadata:
+      if instance.metadata and instance.metadata.get("candidate_path", None):
         def _get_text(candidate):
           return (
               candidate["title_text"].strip()
