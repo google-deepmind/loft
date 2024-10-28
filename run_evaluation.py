@@ -86,6 +86,11 @@ _TASK_TYPE = flags.DEFINE_enum(
     help="Task name to run evaluation on.",
     required=True,
 )
+_DEDUPLICATE_PIDS = flags.DEFINE_bool(
+    "deduplicate_pids",
+    False,
+    help="Whether to deduplicate pids for gold answers and predictions.",
+)
 
 
 def _load_predictions_from_jsonl(path: str) -> dict[str, Any]:
@@ -137,11 +142,17 @@ def run_evaluation(
       )
       print(f"[Warning] Query {qid} was unanswered, marking it as incorrect.")
     else:
+      if _DEDUPLICATE_PIDS.value:
+        candidate_path = os.path.join(
+            os.path.dirname(_ANSWER_FILE_PATH.value), "corpus.jsonl"
+        )
+        prediction["metadata"].update({"candidate_path": candidate_path})
       eval_instance = loft_evaluation.EvaluationInstance(
           qid=qid,
           gold_answers=data_blob["answers"],
           model_output=prediction["model_outputs"],
           num_turns=prediction["num_turns"],
+          metadata=prediction.get("metadata", None),
       )
 
     # Compute list of metrics dictionaries per instance

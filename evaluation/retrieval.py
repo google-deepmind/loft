@@ -16,6 +16,7 @@
 """Evaluation functions for retrieval."""
 
 import collections
+import json
 from typing import Any
 from evaluation import loft_evaluation as evaluation
 
@@ -88,11 +89,28 @@ class RetrievalEvaluation(evaluation.LOFTEvalution):
     metrics = []
     for turn_number in range(instance.num_turns):
       instance_metrics = {}
+      pid2text = {}
+      if "candidate_path" in instance.metadata:
+        def _get_text(candidate):
+          return (
+              candidate["title_text"].strip()
+              + candidate["passage_text"].strip()
+          )
+
+        with open(instance.metadata["candidate_path"]) as f:
+          for line in f:
+            candidate = json.loads(line)
+            pid2text[candidate["pid"]] = _get_text(candidate)
+
       if instance.num_turns == 1:
         gold_ids = self.process_goldens(instance.gold_answers)
       else:
         gold_ids = self.process_goldens([instance.gold_answers[turn_number]])
       pred_ids = self.process_prediction(instance.model_output[turn_number])
+      if "candidate_path" in instance.metadata:
+        gold_ids = [pid2text[pid] for pid in gold_ids]
+        pred_ids = [pid2text[pid] for pid in pred_ids]
+
       instance_metrics["qid"] = instance.qid
       instance_metrics["turn_id"] = str(turn_number)
       instance_metrics["recall@1"] = compute_recall_at_k(

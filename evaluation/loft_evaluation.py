@@ -44,6 +44,8 @@ class EvaluationInstance:
   model_output: Any | list[Any]
   # Number of converstaional turns in the instance
   num_turns: int
+  # Any additional metadata about the instance.
+  metadata: dict[str, Any] | None = None
 
 
 class LOFTEvalution(Protocol):
