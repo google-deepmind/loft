@@ -1,7 +1,8 @@
 # LOFT: A 1 Million+ Token Long-Context Benchmark
 
 This repository houses the resources for LOFT, the Long Context Frontiers benchmark, introduced in the research paper [Can Long-Context Language Models Subsume Retrieval, RAG, SQL, and More?](https://arxiv.org/abs/2406.13121).
-LOFT consists of 6 long-context task categories spanning retrieval, multi-hop compositional reasoning, and more, totaling 35 datasets and 4 modalities.
+LOFT consists of 6 long-context task categories spanning retrieval, multi-hop
+compositional reasoning, and more, totaling 35 datasets and 4 modalities.
 
 ## Installation
 ```bash
@@ -19,37 +20,40 @@ $ sh download.sh $BASE_DIR
 ```
 
 Each dataset is also available from the links in the [Datasets](#datasets) table.
-For a small subset, `download.sh` will additionally run `preprocess.py`, which infills the missing fields in the queries and corpus files.
+For a small subset, `download.sh` will additionally run `preprocess.py`, which
+infills the missing fields in the queries and corpus files.
 Once the download is completed, you will see the file structure as below:
 
 ```
 $BASE_DIR
+└── data
+│    ├── retrieval
+│    │   ├── arguana
+│    │   │   ├── 128k
+│    │   │   │   ├── corpus.jsonl
+│    │   │   │   ├── dev_queries.jsonl
+│    │   │   │   ├── few_shot_queries.jsonl
+│    │   │   │   └── test_queries.jsonl
+│    │   │   ├── 1m
+│    │   │   └── 32k
+│    │   ├── fever
+│    │   │   ├── ...
+│    │   ├── ...
+│    ├── rag
+│    ├── sql
+│    └── icl
 │
-└───data
-│   └───retrieval
-│   │   └───arguana
-│   │   │   └───32k
-│   │   │   │   └───corpus.jsonl
-│   │   │   │   └───dev_queries.jsonl
-│   │   │   │   └───few_shot_queries.jsonl
-│   │   │   └───128k
-│   │   │   └───1m
-│   │   └───fever
-│   │   └───...
-|   │
-│   └───rag
-│   └───sql
-│   └───icl
-│
-└───prompts
-    └───retrieval_128k
-        │   retrieval_arguana_128k.txt
-        │   retrieval_fever_128k.txt
-        └───...
+└── prompts
+    ├── retrieval_128k
+        ├── retrieval_arguana_128k.txt
+        ├── retrieval_fever_128k.txt
+        ├── ...
 ```
 
-The `data` folder contains the LOFT datasets and the `prompts` folder contains samples of prompts used in LOFT.
-We also provide an example prompt in `PROMPT_EXAMPLE.txt` showing how Corpus-in-Context (CiC) prompting can be done for the text retrieval task.
+The `data` folder contains the LOFT datasets and the `prompts` folder contains
+samples of prompts used in LOFT.
+We also provide an example prompt in `PROMPT_EXAMPLE.txt` showing how
+Corpus-in-Context (CiC) prompting can be done for the text retrieval task.
 
 ## Inference and Evaluation
 We currently support using `gemini-1.5-flash-002` from VertexAI for inference.
@@ -74,7 +78,7 @@ python run_evaluation.py \
 ```
 
 The same script can be found from `infer_eval.sh`.
-We provide example queries and predictions files in  [evaluation/example_predictions/](evaluation/example_predictions/).
+We provide example queries and predictions files in [evaluation/example_predictions/](evaluation/example_predictions/).
 Each `task_type` outputs many different metric scores.
 To understand which `task_type` to use for each dataset and also to see the primary evaluation metric reported in the paper for each dataset, see the [Datasets](#datasets) table.
 
@@ -130,7 +134,7 @@ To understand which `task_type` to use for each dataset and also to see the prim
 
 ## Citing this work
 
-```latex
+```
 @article{Lee2024LongContext,
   title={Can Long-Context Language Models Subsume Retrieval, RAG, SQL, and More?},
   author={Jinhyuk Lee and Anthony Chen and Zhuyun Dai and Dheeru Dua and Devendra Singh Sachan and Michael Boratko and Yi Luan and Sébastien M. R. Arnold and Vincent Perot and Siddharth Dalmia and Hexiang Hu and Xudong Lin and Panupong Pasupat and Aida Amini and Jeremy R. Cole and Sebastian Riedel and Iftekhar Naim and Ming-Wei Chang and Kelvin Guu},
@@ -154,7 +158,8 @@ All other materials are licensed under the Creative Commons Attribution 4.0
 International License (CC-BY). You may obtain a copy of the CC-BY license at:
 https://creativecommons.org/licenses/by/4.0/legalcode
 
-Individual tasks may be subject to copyright and licensing from their respective owners - please see individual download files for details.
+Individual tasks may be subject to copyright and licensing from their respective
+owners - please see individual download files for details.
 
 Unless required by applicable law or agreed to in writing, all software and
 materials distributed here under the Apache 2.0 or CC-BY licenses are

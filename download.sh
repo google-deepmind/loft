@@ -1,5 +1,5 @@
 #!/bin/bash
-# Copyright 2024 DeepMind Technologies Limited
+# Copyright 2025 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,6 +17,8 @@
 BASE_DIR=$1
 ORIGINAL_DIR=$(pwd)
 mkdir -p ${BASE_DIR}
+cd ${BASE_DIR}
+BASE_DIR=$(pwd)  # Converts to absolute path once in directory.
 
 # Text retrieval datasets.
 cd ${BASE_DIR}
