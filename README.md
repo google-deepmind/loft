@@ -122,6 +122,16 @@ To understand which `task_type` to use for each dataset and also to see the prim
 | Many-Shot ICL |[BBH-web](https://github.com/suzgunmirac/BIG-Bench-Hard) | Multiple-choice QA | `icl` | `em` | - | [Link](https://storage.googleapis.com/loft-bench/icl/web_of_lies.zip) |
 | Many-Shot ICL |[LIB-dialogue](https://github.com/TIGER-AI-Lab/LongICLBench) | Classification | - | - | ✅ | Coming Soon |
 
+## LOFT-Hard Subset
+From the experiments in our [paper](https://arxiv.org/abs/2406.13121), we
+learned that Gemini 1.5 was already performing well on many LOFT datasets, but
+also it showed some headroom on other datasets.
+Hence, we recommend iterating on the following four datasets:
+
+* **MuSiQue, QAMPARI, QUEST, Spider**
+
+Full datasets and inference are supported from the current OSS.
+
 ## Past & Upcoming Releases
 
 * [ ] Remaining multi-modal data.

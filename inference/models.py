@@ -16,7 +16,6 @@
 """Models used for inference."""
 
 import abc
-import enum
 from typing import Any, List
 
 from absl import logging
@@ -33,11 +32,6 @@ ContentChunk = utils.ContentChunk
 MimeType = utils.MimeType
 LOCATION = 'us-central1'
 TEMPERATURE = 0.0
-
-
-class GeminiModel(enum.StrEnum):
-  GEMINI_1_5_FLASH_002 = 'gemini-1.5-flash-002'  # Max input tokens: 1,048,576
-  GEMINI_1_5_PRO_002 = 'gemini-1.5-pro-002'  # Max input tokens: 2,097,152
 
 
 class Model(metaclass=abc.ABCMeta):
@@ -169,7 +163,7 @@ def get_model(
 ) -> Model:
   """Returns the model to use."""
 
-  if model_url_or_name in GeminiModel.__members__.values():
+  if model_url_or_name.startswith('gemini-'):
     if project_id is None:
       raise ValueError(
           'Project ID and service account are required for VertexAIModel.'

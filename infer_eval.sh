@@ -16,16 +16,20 @@
 
 BASE_DIR=$1
 DATASET=$2
+TASK_TYPE=retrieval
+LENGTH=128k
+SPLIT=dev
+mkdir -p ${BASE_DIR}/outputs/${TASK_TYPE}/${DATASET}/${LENGTH}
 
 python run_inference.py \
-    --prompt_prefix_path ${BASE_DIR}/prompts/retrieval_128k/retrieval_${DATASET}_128k.txt \
-    --data_dir ${BASE_DIR}/data/retrieval/${DATASET}/128k \
-    --split dev \
-    --context_length 128k \
-    --output_path ${BASE_DIR}/outputs/retrieval/${DATASET}/128k/predictions.jsonl \
+    --prompt_prefix_path ${BASE_DIR}/prompts/${TASK_TYPE}_${LENGTH}/${TASK_TYPE}_${DATASET}_${LENGTH}.txt \
+    --data_dir ${BASE_DIR}/data/${TASK_TYPE}/${DATASET}/${LENGTH} \
+    --split ${SPLIT} \
+    --context_length ${LENGTH} \
+    --output_path ${BASE_DIR}/outputs/${TASK_TYPE}/${DATASET}/${LENGTH}/${SPLIT}_predictions.jsonl \
     --project_id ${PROJECT_ID}
 
 python run_evaluation.py \
-    --answer_file_path ${BASE_DIR}/data/retrieval/${DATASET}/128k/dev_queries.jsonl \
-    --pred_file_path ${BASE_DIR}/outputs/retrieval/${DATASET}/128k/predictions.jsonl \
-    --task_type retrieval
+    --answer_file_path ${BASE_DIR}/data/${TASK_TYPE}/${DATASET}/${LENGTH}/dev_queries.jsonl \
+    --pred_file_path ${BASE_DIR}/outputs/${TASK_TYPE}/${DATASET}/${LENGTH}/${SPLIT}_predictions.jsonl \
+    --task_type ${TASK_TYPE}

@@ -73,10 +73,9 @@ _OUTPUT_PATH = flags.DEFINE_string(
     "Path to write prediction outputs as a JSONL file.",
     required=True,
 )
-_MODEL_URL_OR_NAME = flags.DEFINE_enum(
+_MODEL_URL_OR_NAME = flags.DEFINE_string(
     "model_url_or_name",
-    "gemini-1.5-flash-002",
-    models.GeminiModel,
+    "gemini-1.5-pro",
     "Evergreen model URL or API-based model name.",
 )
 _PROJECT_ID = flags.DEFINE_string(
