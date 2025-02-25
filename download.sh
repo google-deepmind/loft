@@ -30,6 +30,7 @@ for DATASET in "${DATASETS[@]}"; do
   unzip ${DATASET}.zip
   rm ${DATASET}.zip
 done
+cd ${ORIGINAL_DIR}
 
 # Text RAG datasets.
 cd ${BASE_DIR}
@@ -41,6 +42,7 @@ for DATASET in "${DATASETS[@]}"; do
   unzip ${DATASET}.zip
   rm ${DATASET}.zip
 done
+cd ${ORIGINAL_DIR}
 
 # SQL datasets.
 cd ${BASE_DIR}
@@ -52,6 +54,7 @@ for DATASET in "${DATASETS[@]}"; do
   unzip ${DATASET}.zip
   rm ${DATASET}.zip
 done
+cd ${ORIGINAL_DIR}
 
 # ICL datasets.
 cd ${BASE_DIR}
