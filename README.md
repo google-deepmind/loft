@@ -115,7 +115,7 @@ To understand which `task_type` to use for each dataset and also to see the prim
 | Visual Retrieval | [Flickr30k](https://www.kaggle.com/datasets/hsankesara/flickr-image-dataset) | Image Retrieval | `retrieval` | `recall@1` |✅ | Coming Soon |
 | Visual Retrieval | [MS COCO](https://cocodataset.org) | Image Retrieval | `retrieval` | `recall@1` |✅ | Coming Soon |
 | Visual Retrieval | [OVEN](https://github.com/open-vision-language/oven) | Image-text Retrieval | `retrieval` | `recall@1` | - | Coming Soon |
-| Visual Retrieval | [MSR-VTT](https://cove.thecvf.com/datasets/839) | Video Retrieval | `retrieval` | `recall@1`| ✅ | [Link](https://storage.googleapis.com/loft-bench/mm/msrvtt.zip) |
+| Visual Retrieval | [MSR-VTT](https://cove.thecvf.com/datasets/839) | Video Retrieval | `retrieval` | `recall@1`| ✅ | Coming Soon |
 | Audio Retrieval | [FLEURS-en](https://huggingface.co/datasets/google/fleurs) | Audio Retrieval | `retrieval` | `recall@1` | - | [Link](https://storage.googleapis.com/loft-bench/mm/fleurs_en_tts.zip) |
 | Audio Retrieval | [FLEURS-es](https://huggingface.co/datasets/google/fleurs) | Audio Retrieval | `retrieval` | `recall@1` | - | [Link](https://storage.googleapis.com/loft-bench/mm/fleurs_es_tts.zip) |
 | Audio Retrieval | [FLEURS-fr](https://huggingface.co/datasets/google/fleurs) | Audio Retrieval | `retrieval` | `recall@1`| - | [Link](https://storage.googleapis.com/loft-bench/mm/fleurs_fr_tts.zip) |
