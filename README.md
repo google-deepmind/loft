@@ -103,13 +103,13 @@ To understand which `task_type` to use for each dataset and also to see the prim
 | Visual Retrieval | [MS COCO](https://cocodataset.org) | Image Retrieval | `retrieval` | `recall@1` |✅ | Coming Soon |
 | Visual Retrieval | [OVEN](https://github.com/open-vision-language/oven) | Image-text Retrieval | `retrieval` | `recall@1` | - | Coming Soon |
 | Visual Retrieval | [MSR-VTT](https://cove.thecvf.com/datasets/839) | Video Retrieval | `retrieval` | `recall@1`| ✅ | [Link](https://storage.googleapis.com/loft-bench/mm/msrvtt.zip) |
-| Audio Retrieval | [FLEURS-en](https://huggingface.co/datasets/google/fleurs) | Audio Retrieval | `retrieval` | `recall@1` | - | Coming Soon |
-| Audio Retrieval | [FLEURS-es](https://huggingface.co/datasets/google/fleurs) | Audio Retrieval | `retrieval` | `recall@1` | - | Coming Soon |
-| Audio Retrieval | [FLEURS-fr](https://huggingface.co/datasets/google/fleurs) | Audio Retrieval | `retrieval` | `recall@1`| - | Coming Soon |
-| Audio Retrieval | [FLEURS-hi](https://huggingface.co/datasets/google/fleurs) | Audio Retrieval | `retrieval` | `recall@1` | - | Coming Soon |
-| Audio Retrieval | [FLEURS-zh](https://huggingface.co/datasets/google/fleurs) | Audio Retrieval | `retrieval` | `recall@1` | - | Coming Soon |
+| Audio Retrieval | [FLEURS-en](https://huggingface.co/datasets/google/fleurs) | Audio Retrieval | `retrieval` | `recall@1` | - | [Link](https://storage.googleapis.com/loft-bench/mm/fleurs_en_tts.zip) |
+| Audio Retrieval | [FLEURS-es](https://huggingface.co/datasets/google/fleurs) | Audio Retrieval | `retrieval` | `recall@1` | - | [Link](https://storage.googleapis.com/loft-bench/mm/fleurs_es_tts.zip) |
+| Audio Retrieval | [FLEURS-fr](https://huggingface.co/datasets/google/fleurs) | Audio Retrieval | `retrieval` | `recall@1`| - | [Link](https://storage.googleapis.com/loft-bench/mm/fleurs_fr_tts.zip) |
+| Audio Retrieval | [FLEURS-hi](https://huggingface.co/datasets/google/fleurs) | Audio Retrieval | `retrieval` | `recall@1` | - | [Link](https://storage.googleapis.com/loft-bench/mm/fleurs_hi_tts.zip) |
+| Audio Retrieval | [FLEURS-zh](https://huggingface.co/datasets/google/fleurs) | Audio Retrieval | `retrieval` | `recall@1` | - | [Link](https://storage.googleapis.com/loft-bench/mm/fleurs_zh_tts.zip) |
 | RAG | [NQ](https://github.com/beir-cellar/beir) | Question Answering | `rag` | `subspan_em` | - | [Link](https://storage.googleapis.com/loft-bench/rag/nq.zip) |
-| RAG | [TopiOCQA](https://github.com/McGill-NLP/topiocqa) | Multi-turn QA | `rag` |  `subspan_em` | - | Coming Soon |
+| RAG | [TopiOCQA](https://github.com/McGill-NLP/topiocqa) | Multi-turn QA | `rag` |  `subspan_em` | - | [Link](https://storage.googleapis.com/loft-bench/rag/topiocqa.zip) |
 | RAG | [HotPotQA](https://github.com/beir-cellar/beir) | Multi-hop QA | `rag` |  `subspan_em` | - | [Link](https://storage.googleapis.com/loft-bench/rag/hotpotqa.zip) |
 | RAG | [MuSiQue](https://allenai.org/data/musique) | Multi-hop QA | `rag` |  `subspan_em` | - | [Link](https://storage.googleapis.com/loft-bench/rag/musique.zip) |
 | RAG | [QAMPARI](https://github.com/samsam3232/qampari) | Multi-target QA | `multi_value_rag` | `subspan_em` | - | [Link](https://storage.googleapis.com/loft-bench/rag/qampari.zip) |

@@ -35,7 +35,7 @@ done
 cd ${BASE_DIR}
 mkdir -p data/rag/
 cd data/rag
-DATASETS=("nq" "hotpotqa" "musique" "qampari" "quest")
+DATASETS=("nq" "hotpotqa" "musique" "qampari" "quest" "topiocqa")
 for DATASET in "${DATASETS[@]}"; do
   wget https://storage.googleapis.com/loft-bench/rag/${DATASET}.zip
   unzip ${DATASET}.zip
@@ -49,6 +49,17 @@ cd data/sql
 DATASETS=("spider" "sparc")
 for DATASET in "${DATASETS[@]}"; do
   wget https://storage.googleapis.com/loft-bench/sql/${DATASET}.zip
+  unzip ${DATASET}.zip
+  rm ${DATASET}.zip
+done
+
+# MM datasets.
+cd ${BASE_DIR}
+mkdir -p data/mm/
+cd data/mm
+DATASETS=("fleurs_en_tts" "fleurs_es_tts" "fleurs_fr_tts" "fleurs_hi_tts" "fleurs_zh_tts")
+for DATASET in "${DATASETS[@]}"; do
+  wget https://storage.googleapis.com/loft-bench/mm/${DATASET}.zip
   unzip ${DATASET}.zip
   rm ${DATASET}.zip
 done
