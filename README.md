@@ -61,20 +61,33 @@ Please prepare your `PROJECT_ID` from [Google Cloud](https://cloud.google.com/ve
 To run the inference with `gemini-1.5-flash-002` and evaluate predictions:
 
 ```bash
-DATASET=msmarco
-PROJECT_ID=your-gcp-project-id
+BASE_DIR=$1
+DATASET=$2
+LENGTH="128k"
+TASK_TYPE="retrieval"
+SPLIT="dev"
+PROMPT_TYPE="few_shot_with_cot"
+PROMPT="${TASK_TYPE}_${DATASET}_${LENGTH}_${SPLIT}:${PROMPT_TYPE}"
+echo "Prompt: ${PROMPT}"
+
+mkdir -p ${BASE_DIR}/outputs/${TASK_TYPE}/${DATASET}/${LENGTH}
+answer_file_extension="jsonl"
+
 python run_inference.py \
-    --prompt_prefix_path ${BASE_DIR}/prompts/retrieval_128k/retrieval_${DATASET}_128k.txt \
-    --data_dir ${BASE_DIR}/data/retrieval/${DATASET}/128k \
-    --split dev \
-    --context_length 128k \
-    --output_path ${BASE_DIR}/outputs/retrieval/${DATASET}/128k/predictions.jsonl \
-    --project_id ${PROJECT_ID}
+    --prompt_name ${PROMPT} \
+    --task_type ${TASK_TYPE} \
+    --base_dir ${BASE_DIR} \
+    --data_dir ${TASK_TYPE}/${DATASET}/${LENGTH} \
+    --split ${SPLIT} \
+    --context_length ${LENGTH} \
+    --output_path ${BASE_DIR}/outputs/${TASK_TYPE}/${DATASET}/${LENGTH}/${SPLIT}_predictions.jsonl \
+    --project_id ${PROJECT_ID} \
+    --overwrite
 
 python run_evaluation.py \
-    --answer_file_path ${BASE_DIR}/data/retrieval/${DATASET}/128k/dev_queries.jsonl \
-    --pred_file_path ${BASE_DIR}/outputs/retrieval/${DATASET}/128k/predictions.jsonl \
-    --task_type retrieval
+    --answer_file_path ${BASE_DIR}/data/${TASK_TYPE}/${DATASET}/${LENGTH}/dev_queries.${answer_file_extension} \
+    --pred_file_path ${BASE_DIR}/outputs/${TASK_TYPE}/${DATASET}/${LENGTH}/${SPLIT}_predictions.jsonl \
+    --task_type ${TASK_TYPE}
 ```
 
 The same script can be found from `infer_eval.sh`.
@@ -134,9 +147,8 @@ Full datasets and inference are supported from the current OSS.
 
 ## Past & Upcoming Releases
 
-* [ ] Remaining multi-modal data.
-* [ ] Prompts for RAG, SQL, and multi-modal retrieval.
-* [ ] Prompt conversion code (data => prompt).
+* [ ] Remaining multi-modal data and inference.
+* [x] Prompt conversion code (data => prompt).
 * [x] Inference code and prompts for retrieval (10/25/24).
 * [x] Evaluation code for ICL and some ICL and visual retrieval datasets (8/30/24).
 * [x] Evaluation code for text tasks and code to regenerate some of the LOFT datasets (6/29/24).

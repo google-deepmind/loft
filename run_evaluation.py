@@ -123,9 +123,23 @@ def run_evaluation(
 
   metrics_per_line = []
   num_unanswered_queries = 0
-  for line in open(answer_file_path):
-    data_blob = json.loads(line)
-    qid = data_blob["qid"]
+  if task_type == "icl":
+    if answer_file_path.endswith(".json"):
+      with open(answer_file_path) as f:
+        json_objects = json.load(f)
+    else:
+      raise ValueError(f"Unsupported answer file extension: {answer_file_path}")
+  else:
+    if answer_file_path.endswith(".jsonl"):
+      with open(answer_file_path) as f:
+        lines = f.readlines()
+        json_objects = []
+        for line in lines:
+          json_objects.append(json.loads(line))
+    else:
+      raise ValueError(f"Unsupported answer file extension: {answer_file_path}")
+  for data_idx, data_blob in enumerate(json_objects):
+    qid = data_blob.get("qid", str(data_idx))
     prediction = predictions.get(qid, None)
     if not prediction:
       num_unanswered_queries += 1
@@ -136,7 +150,9 @@ def run_evaluation(
       # answer to compare to.
       eval_instance = loft_evaluation.EvaluationInstance(
           qid=qid,
-          gold_answers=data_blob["answers"],
+          gold_answers=data_blob.get(
+              "answers", [data_blob.get("target", "").split(" ")]
+          ),
           model_output=[""],
           num_turns=1,
       )
@@ -149,7 +165,9 @@ def run_evaluation(
         prediction["metadata"].update({"candidate_path": candidate_path})
       eval_instance = loft_evaluation.EvaluationInstance(
           qid=qid,
-          gold_answers=data_blob["answers"],
+          gold_answers=data_blob.get(
+              "answers", [data_blob.get("target", "").split(" ")]
+          ),
           model_output=prediction["model_outputs"],
           num_turns=prediction["num_turns"],
           metadata=prediction.get("metadata", None),

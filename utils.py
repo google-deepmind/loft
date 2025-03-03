@@ -224,6 +224,7 @@ def save_run_metadata(
 
 def load_data_from_file(
     data_dir: str,
+    base_dir: str,
     split: str = "dev",
     resource_dir: str = "",
     strip_text: bool = True,
@@ -247,7 +248,12 @@ def load_data_from_file(
         s = s.replace(word, "")
     return s
 
-  with open(_DATA_FILE_PATH.format(data_dir=data_dir, split=split), "rt") as f:
+  with open(
+      _DATA_FILE_PATH.format(
+          data_dir=os.path.join(base_dir, "data", data_dir), split=split
+      ),
+      "rt",
+  ) as f:
     for line in f:
       line = json.loads(line)
       queries[line["qid"]] = _maybe_strip(line["query_text"])
@@ -260,7 +266,7 @@ def load_data_from_file(
               for img_path in line["metadata"]["img_path"]
           ]
 
-  with open(os.path.join(data_dir, "corpus.jsonl"), "r") as f:
+  with open(os.path.join(base_dir, "data", data_dir, "corpus.jsonl"), "r") as f:
     for line in f:
 
       line = json.loads(line)
@@ -280,21 +286,26 @@ def load_data_from_file(
 
 def load_bbh_data_from_file(
     data_dir: str,
+    base_dir: str,
     split: str = "dev",
+    **kwargs,
 ) -> LOFTData:
   """Loads the queries, corpus and answers from the given ICL data directory."""
+  del kwargs
   queries = {}
   corpus = {}
   answers = {}
   metadata = {}
-  with open(os.path.join(data_dir, "corpus.json"), "r") as f:
+  with open(os.path.join(base_dir, "data", data_dir, "corpus.json"), "r") as f:
     support_set = json.load(f)
-  with open(os.path.join(data_dir, f"{split}_queries.json"), "r") as f:
+  with open(
+      os.path.join(base_dir, "data", data_dir, f"{split}_queries.json"), "r"
+  ) as f:
     query_set = json.load(f)
 
   for query_idx, query in enumerate(query_set):
-    queries[f"query_{split}_{str(query_idx)}"] = query
-    answers[f"query_{split}_{str(query_idx)}"] = [query["target"].split(" ")]
+    queries[f"{str(query_idx)}"] = query
+    answers[f"{str(query_idx)}"] = [query["target"].split(" ")]
 
   for support_idx, support in enumerate(support_set):
     corpus[f"support_{str(support_idx)}"] = support
@@ -304,17 +315,22 @@ def load_bbh_data_from_file(
 
 def load_long_icl_bench_dialogue_re_data_from_file(
     data_dir: str,
+    base_dir: str,
     split: str = "dev",
+    **kwargs,
 ) -> LOFTData:
   """Loads the queries, corpus and answers from the given ICL data directory."""
+  del kwargs
   queries = {}
   corpus = {}
   answers = {}
   metadata = {}
-  with open(os.path.join(data_dir, "corpus.json"), "r") as f:
+  with open(os.path.join(base_dir, "data", data_dir, "corpus.json"), "r") as f:
     support_set = json.load(f)
   query_set = []
-  with open(os.path.join(data_dir, f"{split}_queries.jsonl"), "r") as f:
+  with open(
+      os.path.join(base_dir, "data", data_dir, f"{split}_queries.jsonl"), "r"
+  ) as f:
     for line in f:
       query_set.append(json.loads(line))
 
@@ -404,7 +420,9 @@ def run_one_example(
   return output
 
 
-def extract_prediction(model_output: str) -> List[str]:
+def extract_prediction(
+    model_output: str, answer_prefix: str = "final answer"
+) -> List[str]:
   """Extracts the prediction from the model output."""
 
   def _escape_single_quotes(s: str):
@@ -423,7 +441,9 @@ def extract_prediction(model_output: str) -> List[str]:
   preds = []
   for l in model_output:
     # Turns the string "Final Answer: [1, ...]" into the list of ints [1, ...]
-    if "final answer" in l.lower() and "[" in l and "]" in l:
+    if "[" in l and "]" in l:
+      if answer_prefix not in l.lower():
+        logging.warning("Answer prefix %s not found in %s", answer_prefix, l)
       pred_start_index = l.find("[")
       pred_end_index = l.rfind("]") + 1  # Finds the last "]"
       pred_as_str = l[pred_start_index:pred_end_index].strip()

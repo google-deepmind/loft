@@ -16,10 +16,11 @@
 """Models used for inference."""
 
 import abc
+import traceback
 from typing import Any, List
 
 from absl import logging
-from inference import utils
+import utils
 import vertexai
 from vertexai.generative_models import GenerationConfig
 from vertexai.generative_models import GenerativeModel
@@ -86,12 +87,14 @@ class VertexAIModel(Model):
       project_id: str,
       model_name: str,
       pid_mapper: dict[str, str],
+      answer_prefix: str = 'final answer',
   ):
     self.project_id = project_id
     self.model_name = model_name
     self.pid_mapper = pid_mapper
     vertexai.init(project=project_id, location=LOCATION)
     self.model = GenerativeModel(self.model_name)
+    self.answer_prefix = answer_prefix
 
   def _process_content_chunk(self, content_chunk: ContentChunk) -> Part:
     if content_chunk.mime_type in [
@@ -129,12 +132,14 @@ class VertexAIModel(Model):
     """Postprocesses the response from the model."""
     try:
       output_text = getattr(response, 'candidates')[0].content.parts[0].text
-      final_answers = utils.extract_prediction(output_text)
-      final_answers = [
-          self.pid_mapper[str(answer)] for answer in final_answers
-      ]
+      final_answers = utils.extract_prediction(output_text, self.answer_prefix)
+      if self.pid_mapper is not None:
+        final_answers = [
+            self.pid_mapper[str(answer)] for answer in final_answers
+        ]
     except Exception as e:  # pylint:disable=broad-exception-caught
       logging.error('Bad response %s with error: %s', response, str(e))
+      traceback.print_exc()
       raise ValueError(f'Unexpected response: {response}') from e
 
     return final_answers
@@ -160,6 +165,7 @@ def get_model(
     model_url_or_name: str,
     project_id: str | None,
     pid_mapper: dict[str, str],
+    answer_prefix: str = 'final answer',
 ) -> Model:
   """Returns the model to use."""
 
@@ -172,6 +178,7 @@ def get_model(
         project_id=project_id,
         model_name=model_url_or_name,
         pid_mapper=pid_mapper,
+        answer_prefix=answer_prefix,
     )
   else:
     raise ValueError(f'Unsupported model: {model_url_or_name}')

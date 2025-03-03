@@ -21,12 +21,23 @@ show what the CoT reasoning should look like.
 
 Example run command:
 # Retrieval
+BASE_DIR=./data
+LENGTH="32k"
+TASK_TYPE="retrieval"
+SPLIT="dev"
+PROMPT_TYPE="few_shot_cot_simple_reverse:corpus_echo:None_max_shots"
+PROMPT="${TASK_TYPE}_${DATASET}_${LENGTH}_${SPLIT}:${PROMPT_TYPE}"
+
+mkdir -p ${BASE_DIR}/outputs/${TASK_TYPE}/${DATASET}/${LENGTH}
+
 python run_inference.py \
-    --prompt_prefix_path loft-oss/prompts/retrieval_arguana_128k.txt \
-    --data_dir loft-oss/arguana/128k \
-    --split dev \
-    --context_length 128k \
-    --output_path loft-oss/outputs/retrieval/arguana/128k/predictions.jsonl \
+    --prompt_name ${PROMPT} \
+    --base_dir ${BASE_DIR} \
+    --data_dir ${TASK_TYPE}/${DATASET}/${LENGTH} \
+    --split ${SPLIT} \
+    --context_length ${LENGTH} \
+    --output_path ${BASE_DIR}/outputs/${TASK_TYPE}/${DATASET}/${LENGTH}/${SPLIT}_predictions.jsonl \
+    --project_id ${PROJECT_ID} \
     --overwrite
 """
 
@@ -39,9 +50,10 @@ from typing import Any, Dict, Sequence
 from absl import app
 from absl import flags
 from inference import models
-from inference import prompts
-from inference import utils
+import prompts  # pylint: disable=unused-import
+from prompts import prompt_registry
 import tqdm
+import utils
 
 
 CONTEXT_LENGTH_TO_NUM_TOKENS = {
@@ -50,16 +62,28 @@ CONTEXT_LENGTH_TO_NUM_TOKENS = {
     "1m": 1000000,
 }
 
-_PROMPT_PREFIX_PATH = flags.DEFINE_string(
-    "prompt_prefix_path",
+_PROMPT_NAME = flags.DEFINE_string(
+    "prompt_name",
     None,
-    "Path to the prompt prefix.",
+    "Name of the prompt to use.",
+    required=True,
+)
+_TASK_TYPE = flags.DEFINE_string(
+    "task_type",
+    None,
+    "Task type of the prompt to use.",
+    required=True,
+)
+_BASE_DIR = flags.DEFINE_string(
+    "base_dir",
+    None,
+    "Path to the base directory.",
     required=True,
 )
 _DATA_DIR = flags.DEFINE_string(
     "data_dir",
     None,
-    "Path to the data directory.",
+    "Relative path to the data directory given the base directory.",
     required=True,
 )
 _SPLIT = flags.DEFINE_string(
@@ -115,16 +139,12 @@ _LOG_FAILING_PROMPTS = flags.DEFINE_bool(
 
 MimeType = utils.MimeType
 ContentChunk = utils.ContentChunk
-PromptRegistry = prompts.PromptRegistry
+PromptRegistry = prompt_registry.PromptRegistry
 
 
 def get_num_tokens(text_input: str) -> int:
   # Simple tokenization for the estimated number of tokens.
   return len(text_input.strip().split(" "))
-
-
-def _check_multiturn_prompt(prefix: str) -> bool:
-  return "topiocqa" in prefix.lower() or "sparc" in prefix.lower()
 
 
 def _run_one_example(
@@ -150,31 +170,45 @@ def _run_one_example(
 
 def main(argv: Sequence[str]) -> None:
   del argv
-  prompt_name = os.path.splitext(os.path.basename(_PROMPT_PREFIX_PATH.value))[0]
-  with open(_PROMPT_PREFIX_PATH.value, "r") as f:
-    prefix = f.read()
-    PromptRegistry.add(
-        name=prompt_name,
-        data_dir=_DATA_DIR.value,
-        split=_SPLIT.value,
-        prefix=prefix,
-        is_multi_turn=True if _check_multiturn_prompt(prompt_name) else False,
+  if _PROMPT_NAME.value not in PromptRegistry.prompts:
+    task_name = _PROMPT_NAME.value.split("_")[0]
+    print(PromptRegistry.prompts.keys())
+    registry_str = "\n".join(
+        filter(
+            lambda x: x.startswith(task_name),
+            list(PromptRegistry.prompts.keys()),
+        )
+    )
+    raise ValueError(
+        f"Prompt {_PROMPT_NAME.value} not found in registry.\nAvailable"
+        f" prompts:\n{registry_str}"
     )
 
-  pid_mapper = {
-      str(idx): pid
-      for idx, pid in enumerate(
-          utils.load_data_from_file(
-              data_dir=_DATA_DIR.value,
-              split=_SPLIT.value,
-          ).corpus
-      )
-  }
+  pid_mapper = None
+  # NOTE: Multimodal retrieval (mm) not open-sourced yet.
+  if _TASK_TYPE.value in ["retrieval"]:
+    pid_mapper = {
+        str(idx): pid
+        for idx, pid in enumerate(
+            utils.load_data_from_file(
+                data_dir=_DATA_DIR.value,
+                base_dir=_BASE_DIR.value,
+                resource_dir=os.path.join(
+                    _BASE_DIR.value, "data", _DATA_DIR.value, "resources"
+                ) if _TASK_TYPE.value == "mm" else "",
+                split=_SPLIT.value,
+            ).corpus
+        )
+    }
+  answer_prefix = "final answer"
+  if _TASK_TYPE.value == "icl":
+    answer_prefix = "output"
 
   model = models.get_model(
       model_url_or_name=_MODEL_URL_OR_NAME.value,
       project_id=_PROJECT_ID.value,
       pid_mapper=pid_mapper,
+      answer_prefix=answer_prefix,
   )
 
   finished_lines = {}
@@ -195,11 +229,12 @@ def main(argv: Sequence[str]) -> None:
   )
 
   # Load the lines for inference and the one-shot prompt, then runs inference.
-  examples = PromptRegistry.get_examples(name=prompt_name)
+  examples = PromptRegistry.get_examples(
+      name=_PROMPT_NAME.value, base_dir=_BASE_DIR.value
+  )
   qid2example = {ex.qid: ex for ex in examples}
 
   for ex in qid2example.values():
-    # TODO(jinhyuklee): Implement tokenization for non-text content chunks.
     if not all(chunk.mime_type == MimeType.TEXT for chunk in ex.context_chunks):
       continue
     num_tokens = get_num_tokens(
