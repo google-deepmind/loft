@@ -83,11 +83,3 @@ for DATASET in "${DATASETS[@]}"; do
     --input_dir ${BASE_DIR}/data/retrieval/${DATASET} \
     --dataset ${DATASET}
 done
-
-# Sample retrieval 128k prompts.
-cd ${BASE_DIR}
-mkdir -p prompts/
-cd prompts
-wget https://storage.googleapis.com/loft-bench/prompts/retrieval_128k.zip
-unzip retrieval_128k.zip
-rm retrieval_128k.zip
