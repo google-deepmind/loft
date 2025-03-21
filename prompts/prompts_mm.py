@@ -108,7 +108,7 @@ for length in LENGTHS:
                   shuffle_seed=None,
                   add_image_chunk=True,
                   few_shot_prompt_name=(
-                      f'{TASK}_{length}_{dataset}:few_shot_examples'
+                      f'{TASK}_{dataset}_{length}:few_shot_examples'
                   ),
               ),
           ],

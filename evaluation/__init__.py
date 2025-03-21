@@ -61,6 +61,17 @@ EVALUATION_TASKS = types.MappingProxyType({
             ],
         )
     ),
+    "mm": retrieval.RetrievalEvaluation(
+        config=loft_evaluation.EvaluationConfig(
+            process_model_response_fns=[
+                utils.normalize_passage_ids,
+            ],
+            process_gold_answer_fns=[
+                utils.extract_gold_passage_ids,
+                utils.normalize_passage_id,
+            ],
+        )
+    ),
     "sql": sql.SqlEvaluation(
         config=loft_evaluation.EvaluationConfig(
             process_model_response_fns=[],

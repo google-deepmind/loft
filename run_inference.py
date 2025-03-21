@@ -185,17 +185,13 @@ def main(argv: Sequence[str]) -> None:
     )
 
   pid_mapper = None
-  # NOTE: Multimodal retrieval (mm) not open-sourced yet.
-  if _TASK_TYPE.value in ["retrieval"]:
+  if _TASK_TYPE.value in ["retrieval", "mm"]:
     pid_mapper = {
         str(idx): pid
         for idx, pid in enumerate(
             utils.load_data_from_file(
                 data_dir=_DATA_DIR.value,
                 base_dir=_BASE_DIR.value,
-                resource_dir=os.path.join(
-                    _BASE_DIR.value, "data", _DATA_DIR.value, "resources"
-                ) if _TASK_TYPE.value == "mm" else "",
                 split=_SPLIT.value,
             ).corpus
         )

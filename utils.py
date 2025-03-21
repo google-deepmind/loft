@@ -90,6 +90,13 @@ class ContentChunk:
       return self._text.encode("utf-8")
 
     if self._path is not None:
+      # NOTE: Assuming that _path is a single-turn data.
+      if isinstance(self._path, list):
+        if len(self._path) > 1:
+          raise ValueError(
+              "Multi-turn data is not supported for path content chunk."
+          )
+        self._path = self._path[0]
       with open(self._path, "rb") as fp:
         if self.mime_type == MimeType.IMAGE_JPEG:
           image_bytes = fp.read()
@@ -105,6 +112,8 @@ class ContentChunk:
   @property
   def path_string(self) -> str:
     if self._path is not None:
+      if isinstance(self._path, list):
+        return "\n".join(self._path) + "\n"
       return self._path + "\n"
     else:
       return "No path specified."
@@ -231,6 +240,7 @@ def load_data_from_file(
     blocklist_words: Sequence[str] | None = ("childhood abuse",),
 ) -> LOFTData:
   """Loads the queries, corpus and answers from the given data directory."""
+  del resource_dir
   queries = {}
   corpus = {}
   answers = {}
@@ -247,6 +257,10 @@ def load_data_from_file(
         logging.info("Remove blocklisted word from %s", s)
         s = s.replace(word, "")
     return s
+
+  resource_dir = os.path.join(base_dir, "data", data_dir, "resources")
+  if not os.path.exists(resource_dir):
+    resource_dir = ""
 
   with open(
       _DATA_FILE_PATH.format(

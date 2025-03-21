@@ -16,7 +16,7 @@
 
 BASE_DIR=$1
 DATASET=$2
-LENGTH="128k"
+LENGTH="32k"
 TASK_TYPE="retrieval"
 SPLIT="dev"
 if [[ ${TASK_TYPE} == "icl" ]]; then
