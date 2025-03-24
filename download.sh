@@ -57,7 +57,7 @@ done
 cd ${BASE_DIR}
 mkdir -p data/mm/
 cd data/mm
-DATASETS=("fleurs_en_tts" "fleurs_es_tts" "fleurs_fr_tts" "fleurs_hi_tts" "fleurs_zh_tts")
+DATASETS=("fleurs_en_tts" "fleurs_es_tts" "fleurs_fr_tts" "fleurs_hi_tts" "fleurs_zh_tts" "oven")
 for DATASET in "${DATASETS[@]}"; do
   wget https://storage.googleapis.com/loft-bench/mm/${DATASET}.zip
   unzip ${DATASET}.zip
