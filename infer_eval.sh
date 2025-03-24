@@ -34,6 +34,14 @@ if [[ ${TASK_TYPE} == "icl" ]]; then
   answer_file_extension="json"
 fi
 
+# TopiocQA retrieval task has duplicate PIDs.
+deduplicate_pids=false
+if [[ ${DATASET} == "topiocqa" ]]; then
+  if [[ ${TASK_TYPE} == "retrieval" ]]; then
+    deduplicate_pids=true
+  fi
+fi
+
 python run_inference.py \
     --prompt_name ${PROMPT} \
     --task_type ${TASK_TYPE} \
@@ -48,4 +56,5 @@ python run_inference.py \
 python run_evaluation.py \
     --answer_file_path ${BASE_DIR}/data/${TASK_TYPE}/${DATASET}/${LENGTH}/dev_queries.${answer_file_extension} \
     --pred_file_path ${BASE_DIR}/outputs/${TASK_TYPE}/${DATASET}/${LENGTH}/${SPLIT}_predictions.jsonl \
+    --deduplicate_pids=${deduplicate_pids} \
     --task_type ${TASK_TYPE}
