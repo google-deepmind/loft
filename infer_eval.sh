@@ -17,7 +17,7 @@
 BASE_DIR=$1
 DATASET=$2
 LENGTH="32k"
-TASK_TYPE="retrieval"
+TASK_TYPE="mm"
 SPLIT="dev"
 if [[ ${TASK_TYPE} == "icl" ]]; then
   PROMPT_TYPE="many_shot"  # Use "many_shot" for ICL.

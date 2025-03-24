@@ -279,6 +279,11 @@ def load_data_from_file(
               os.path.join(resource_dir, img_path)
               for img_path in line["metadata"]["img_path"]
           ]
+        if "audio_path" in line["metadata"]:
+          metadata[line["qid"]]["audio_path"] = [
+              os.path.join(resource_dir, audio_path)
+              for audio_path in line["metadata"]["audio_path"]
+          ]
 
   with open(os.path.join(base_dir, "data", data_dir, "corpus.jsonl"), "r") as f:
     for line in f:
@@ -295,6 +300,11 @@ def load_data_from_file(
               os.path.join(resource_dir, img_path)
               for img_path in line["metadata"]["img_path"]
           ]
+        if "audio_path" in corpus[line["pid"]]["metadata"]:
+          corpus[line["pid"]]["metadata"]["audio_path"] = os.path.join(
+              resource_dir, line["metadata"]["audio_path"]
+          )
+
   return LOFTData(queries, corpus, answers, metadata)
 
 

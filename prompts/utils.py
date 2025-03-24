@@ -146,6 +146,26 @@ def add_corpus_chunks(
     )
     doc_start = len(chunks)
 
+    if "audio_path" in passage_data["metadata"] and not passage_data["passage"]:
+      chunks.append(get_text_chunk(corpus_format.format(pid=pid_mapper[pid])))
+      chunks.append(
+          ContentChunk(
+              _path=passage_data["metadata"]["audio_path"],
+              mime_type=MimeType.AUDIO_WAV,
+          )
+      )
+      continue
+    if "audio_path" in passage_data["metadata"] and passage_data["passage"]:
+      chunks.append(
+          get_text_chunk(
+              corpus_format.format(
+                  pid=pid_mapper[pid],
+                  passage=passage_data["passage"],
+              )
+          )
+      )
+      continue
+
     # Skip empty text chunks.
     if chunk_text:
       chunks.append(get_text_chunk(chunk_text))
@@ -523,14 +543,16 @@ def add_multimodal_query_turns(
   """Adds images to the list of query turns."""
   del kwargs
   query = loft_data.queries[qid]
-  img_paths, soft_tokens = None, None
+  img_paths, audio_paths, soft_tokens = None, None, None
   if "img_path" in loft_data.metadata[qid]:
     img_paths = [loft_data.metadata[qid]["img_path"]]
   if "soft_tokens" in loft_data.metadata[qid]:
     soft_tokens = [loft_data.metadata[qid]["soft_tokens"]]
+  if "audio_path" in loft_data.metadata[qid] and not query:
+    audio_paths = loft_data.metadata[qid]["audio_path"]
   if soft_tokens is not None and img_paths is not None:
     assert len(soft_tokens) == len(img_paths)
-    image_chunks = [
+    mm_chunks = [
         ContentChunk(
             _path=img_path,
             mime_type=MimeType.IMAGE_JPEG,
@@ -539,36 +561,38 @@ def add_multimodal_query_turns(
         for img_path, embedding in zip(img_paths, soft_tokens)
     ]
   elif img_paths is not None:
-    image_chunks = [
+    mm_chunks = [
         ContentChunk(
             _path=img_path,
             mime_type=MimeType.IMAGE_JPEG,
         )
         for img_path in img_paths
     ]
+  elif audio_paths is not None:
+    mm_chunks = [
+        ContentChunk(
+            _path=audio_paths,
+            mime_type=MimeType.AUDIO_WAV,
+        )
+    ]
   else:
-    image_chunks = []
+    mm_chunks = []
 
-  query_turns.append(
-      [
-          get_text_chunk(
-              query_prefix_format.format(
-                  # Used for few-shot examples.
-                  example_id=example_id
-                  if use_example_id
-                  else None,
-              )
-          )
-      ]
-      + image_chunks
-      + [
-          get_text_chunk(
-              query_suffix_format.format(
-                  query=query,
-              )
-          ),
-      ]
+  prefix_chunks = get_text_chunk(
+      query_prefix_format.format(
+          # Used for few-shot examples.
+          example_id=example_id if use_example_id else None,
+      )
   )
+  suffix_chunks = get_text_chunk(
+      query_suffix_format.format(
+          query=query,
+      )
+  )
+  if query:
+    query_turns.append([prefix_chunks] + mm_chunks + [suffix_chunks])
+  else:
+    query_turns.append([prefix_chunks] + mm_chunks)
 
 
 def add_images_in_query_turns(

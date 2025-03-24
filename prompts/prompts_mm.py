@@ -16,7 +16,6 @@
 """Register prompts for multimodal retrieval."""
 
 import functools
-import os
 
 from prompts import prompt_registry
 from prompts import utils as prompt_utils
@@ -28,7 +27,22 @@ import utils
 PromptRegistry = prompt_registry.PromptRegistry
 TASK = 'mm'
 
-MULTIMODAL_RETRIEVAL_DATASETS = ('oven', 'msrvtt', 'flickr30k', 'mscoco')
+MULTIMODAL_RETRIEVAL_DATASETS = (
+    'oven',
+    'msrvtt',
+    'flickr30k',
+    'mscoco',
+    'fleurs_en_tts',
+    'fleurs_es_tts',
+    'fleurs_hi_tts',
+    'fleurs_zh_tts',
+    'fleurs_fr_tts',
+    'fleurs_en_stt',
+    'fleurs_es_stt',
+    'fleurs_hi_stt',
+    'fleurs_zh_stt',
+    'fleurs_fr_stt',
+)
 RESOURCE_DIR = 'resources/'
 LENGTHS = ('32k', '128k', '1m')
 SPLITS = ('dev', 'test')
@@ -38,6 +52,10 @@ SPLITS = ('dev', 'test')
 # direct use.
 for length in LENGTHS:
   for dataset in MULTIMODAL_RETRIEVAL_DATASETS:
+    if (dataset.endswith('stt') and length != '32k') or (
+        dataset.endswith('tts') and length == '1m'
+    ):
+      continue
     # If there exists a mapper for the prompt, use it.
     prompt_name = task_constants.PROMPT_MAPPER.get(dataset, dataset)
     PromptRegistry.add(
@@ -45,10 +63,7 @@ for length in LENGTHS:
         data_dir=f'{TASK}/{dataset}/{length}',
         cacheable_corpus=True,
         split='few_shot',
-        data_loader=functools.partial(
-            utils.load_data_from_file,
-            resource_dir=os.path.join(RESOURCE_DIR, dataset),
-        ),
+        data_loader=utils.load_data_from_file,  # resource_dir is deprecated.
         context_processors=[],  # No shared context is used.
         query_turn_processors=[
             functools.partial(
@@ -64,7 +79,7 @@ for length in LENGTHS:
             functools.partial(
                 prompt_utils.append_reasoning_to_query_turns,
                 reasoning_format=task_constants.FEW_SHOT_EXAMPLE_ANSWER_FORMAT[
-                    dataset
+                    prompt_name
                 ],
                 qid2reasoning=None,
             ),
@@ -90,10 +105,7 @@ for length in LENGTHS:
           data_dir=f'{TASK}/{dataset}/{length}',
           split=split,
           cacheable_corpus=False,
-          data_loader=functools.partial(
-              utils.load_data_from_file,
-              resource_dir=os.path.join(RESOURCE_DIR, dataset),
-          ),
+          data_loader=utils.load_data_from_file,
           context_processors=[
               functools.partial(
                   prompt_utils.add_text_chunks,
