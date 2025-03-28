@@ -27,27 +27,22 @@ Once the download is completed, you will see the file structure as below:
 ```
 $BASE_DIR
 └── data
-│    ├── retrieval
-│    │   ├── arguana
-│    │   │   ├── 128k
-│    │   │   │   ├── corpus.jsonl
-│    │   │   │   ├── dev_queries.jsonl
-│    │   │   │   ├── few_shot_queries.jsonl
-│    │   │   │   └── test_queries.jsonl
-│    │   │   ├── 1m
-│    │   │   └── 32k
-│    │   ├── fever
-│    │   │   ├── ...
-│    │   ├── ...
-│    ├── rag
-│    ├── sql
-│    └── icl
-│
-└── prompts
-    ├── retrieval_128k
-        ├── retrieval_arguana_128k.txt
-        ├── retrieval_fever_128k.txt
-        ├── ...
+     ├── retrieval
+     │   ├── arguana
+     │   │   ├── 128k
+     │   │   │   ├── corpus.jsonl
+     │   │   │   ├── dev_queries.jsonl
+     │   │   │   ├── few_shot_queries.jsonl
+     │   │   │   └── test_queries.jsonl
+     │   │   ├── 1m
+     │   │   └── 32k
+     │   ├── fever
+     │   │   ├── ...
+     │   ├── ...
+     ├── rag
+     ├── sql
+     ├── icl
+     └── mm
 ```
 
 The `data` folder contains the LOFT datasets and the `prompts` folder contains
