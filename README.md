@@ -45,13 +45,12 @@ $BASE_DIR
      └── mm
 ```
 
-The `data` folder contains the LOFT datasets and the `prompts` folder contains
-samples of prompts used in LOFT.
 We also provide an example prompt in `PROMPT_EXAMPLE.txt` showing how
 Corpus-in-Context (CiC) prompting can be done for the text retrieval task.
 
 ## Inference and Evaluation
-We currently support using `gemini-1.5-flash-002` from VertexAI for inference.
+We currently support using Gemini (e.g., `gemini-1.5-flash-002`) from VertexAI
+for inference.
 Please prepare your `PROJECT_ID` from [Google Cloud](https://cloud.google.com/vertex-ai/generative-ai/docs/start/quickstarts/quickstart-multimodal#expandable-1).
 To run the inference with `gemini-1.5-flash-002` and evaluate predictions:
 
