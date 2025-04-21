@@ -106,10 +106,10 @@ To understand which `task_type` to use for each dataset and also to see the prim
 | Text Retrieval | [MuSiQue](https://allenai.org/data/musique) | Multi-hop QA | `retrieval` | `mrecall@5` | - | [Link](https://storage.googleapis.com/loft-bench/retrieval/musique.zip) |
 | Text Retrieval | [QAMPARI](https://github.com/samsam3232/qampari) | Multi-target QA | `retrieval` |  `mrecall@5` | - | [Link](https://storage.googleapis.com/loft-bench/retrieval/qampari.zip) |
 | Text Retrieval | [QUEST](https://github.com/google-research/language/tree/master/language/quest) | Multi-target QA | `retrieval` | `mrecall@3` | - | [Link](https://storage.googleapis.com/loft-bench/retrieval/quest.zip) |
-| Visual Retrieval | [Flickr30k](https://www.kaggle.com/datasets/hsankesara/flickr-image-dataset) | Image Retrieval | `retrieval` | `recall@1` |✅ | Coming Soon |
-| Visual Retrieval | [MS COCO](https://cocodataset.org) | Image Retrieval | `retrieval` | `recall@1` |✅ | Coming Soon |
+| Visual Retrieval | [Flickr30k](https://www.kaggle.com/datasets/hsankesara/flickr-image-dataset) | Image Retrieval | `retrieval` | `recall@1` | - | [Link](https://storage.googleapis.com/loft-bench/mm/flickr30k.zip) |
+| Visual Retrieval | [MS COCO](https://cocodataset.org) | Image Retrieval | `retrieval` | `recall@1` | - | [Link](https://storage.googleapis.com/loft-bench/mm/mscoco.zip) |
 | Visual Retrieval | [OVEN](https://github.com/open-vision-language/oven) | Image-text Retrieval | `retrieval` | `recall@1` | - | [Link](https://storage.googleapis.com/loft-bench/mm/oven.zip) |
-| Visual Retrieval | [MSR-VTT](https://cove.thecvf.com/datasets/839) | Video Retrieval | `retrieval` | `recall@1`| ✅ | Coming Soon |
+| Visual Retrieval | [MSR-VTT](https://cove.thecvf.com/datasets/839) | Video Retrieval | `retrieval` | `recall@1`| - | [Link](https://storage.googleapis.com/loft-bench/mm/msrvtt.zip) |
 | Audio Retrieval | [FLEURS-en](https://huggingface.co/datasets/google/fleurs) | Audio Retrieval | `retrieval` | `recall@1` | - | [Link](https://storage.googleapis.com/loft-bench/mm/fleurs_en_tts.zip) |
 | Audio Retrieval | [FLEURS-es](https://huggingface.co/datasets/google/fleurs) | Audio Retrieval | `retrieval` | `recall@1` | - | [Link](https://storage.googleapis.com/loft-bench/mm/fleurs_es_tts.zip) |
 | Audio Retrieval | [FLEURS-fr](https://huggingface.co/datasets/google/fleurs) | Audio Retrieval | `retrieval` | `recall@1`| - | [Link](https://storage.googleapis.com/loft-bench/mm/fleurs_fr_tts.zip) |
@@ -133,15 +133,24 @@ To understand which `task_type` to use for each dataset and also to see the prim
 From the experiments in our [paper](https://arxiv.org/abs/2406.13121), we
 learned that Gemini 1.5 was already performing well on many LOFT datasets, but
 also it showed some headroom on other datasets.
-Hence, we recommend iterating on the following four datasets:
+Hence, we recommend iterating on the following three datasets:
 
-* **MuSiQue, QAMPARI, QUEST, Spider**
+* **MuSiQue, QAMPARI, QUEST**
 
 Full datasets and inference are supported from the current OSS.
 
+## LOFT Multimodal Datasets
+For three of the LOFT multimodal datasets, Flickr30k, MS COCO, MSR-VTT, we ask
+the user of this repository to download the datasets from their respective
+websites:
+
+* Flickr30k: https://www.kaggle.com/datasets/hsankesara/flickr-image-dataset
+* MS COCO: https://cocodataset.org/
+* MSR-VTT: https://cove.thecvf.com/datasets/839
+
 ## Past & Upcoming Releases
 
-* [ ] Remaining multi-modal data and inference.
+* [x] Remaining multi-modal data and inference.
 * [x] Prompt conversion code (data => prompt).
 * [x] Inference code and prompts for retrieval (10/25/24).
 * [x] Evaluation code for ICL and some ICL and visual retrieval datasets (8/30/24).
