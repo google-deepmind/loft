@@ -237,7 +237,7 @@ def load_data_from_file(
     split: str = "dev",
     resource_dir: str = "",
     strip_text: bool = True,
-    blocklist_words: Sequence[str] | None = ("childhood abuse",),
+    blacklist_words: Sequence[str] | None = ("childhood abuse",),
 ) -> LOFTData:
   """Loads the queries, corpus and answers from the given data directory."""
   del resource_dir
@@ -250,11 +250,10 @@ def load_data_from_file(
     return s.strip() if strip_text and isinstance(s, str) else s
 
   def _maybe_clean(s):
-    if blocklist_words is None:
+    if blacklist_words is None:
       return s
-    for word in blocklist_words:
+    for word in blacklist_words:
       if word in s:
-        logging.info("Remove blocklisted word from %s", s)
         s = s.replace(word, "")
     return s
 

@@ -89,6 +89,24 @@ We provide example queries and predictions files in [evaluation/example_predicti
 Each `task_type` outputs many different metric scores.
 To understand which `task_type` to use for each dataset and also to see the primary evaluation metric reported in the paper for each dataset, see the [Datasets](#datasets) table.
 
+## Get Prompts for 3P Evaluation
+You can use the following command to get prompts for specific datasets.
+For instance, the prompts for [LOFT-hard](#loft-hard-subset) below are obtained as follows:
+
+```bash
+TASK="retrieval"
+DATASET="qampari"
+LENGTH="128k"
+SPLIT="test"
+PROMPT_NAME="${TASK}_${DATASET}_${LENGTH}_${SPLIT}:few_shot_with_cot"
+python3 dump_prompts.py \
+    --prompt_name="${PROMPT_NAME}" \
+    --base_dir="${HOME}" \
+    --output_format=text \
+    --output_dir="${HOME}/prompts/${PROMPT_NAME}" \
+    --output_format=csv
+```
+
 ## Datasets
 
 | Task | Dataset | Description | Task Type | Primary Metric | Infilling Needed? | Download |
@@ -135,7 +153,7 @@ learned that Gemini 1.5 was already performing well on many LOFT datasets, but
 also it showed some headroom on other datasets.
 Hence, we recommend iterating on the following three datasets:
 
-* **MuSiQue, QAMPARI, QUEST**
+* **MuSiQue [[prompts](https://storage.googleapis.com/loft-bench/prompts/musique.zip)], QAMPARI [[prompts](https://storage.googleapis.com/loft-bench/prompts/qampari.zip)], QUEST [[prompts](https://storage.googleapis.com/loft-bench/prompts/quest.zip)]**
 
 Full datasets and inference are supported from the current OSS.
 
